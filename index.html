@@ -550,6 +550,13 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .dropzone i,.dropzone svg.lucide{width:1.4rem;height:1.4rem;margin:0 auto .5rem;color:var(--faint)}
 .dropzone:hover i,.dropzone:hover svg.lucide{color:var(--blue)}
 
+.admgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
+.admgrid .field:nth-child(5){grid-column:1/-1}
+.admgrid select:disabled{background:var(--bg-soft);color:var(--faint);cursor:not-allowed}
+.admnote{display:flex;align-items:center;gap:.4rem;margin:-.35rem 0 1.15rem}
+.admnote i,.admnote svg.lucide{width:.9rem;height:.9rem;flex:none}
+@media(max-width:640px){.admgrid{grid-template-columns:1fr}}
+
 /* stepbar */
 .stepbar{display:flex;gap:.4rem;margin-bottom:1.5rem}
 .stepbar i{flex:1;height:5px;border-radius:999px;background:var(--line-2)}
@@ -1126,6 +1133,8 @@ main{min-height:60vh;animation:fade .3s ease}
 .fbtn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
 .fbtn .sw{width:.85rem;height:.85rem;border-radius:.25rem;background:var(--line);border:1px solid var(--line-2);flex:none}
 .fbtn.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 10px 20px -12px rgba(31,67,151,.7)}
+.fsub{display:flex;flex-direction:column;gap:.4rem;margin:.4rem 0 .1rem 1.5rem;padding-left:.85rem;border-left:2px solid var(--line-2)}
+.fbtn.sub{font-size:.83rem;padding:.5rem .7rem;font-weight:600}
 .fbtn.active .sw{background:#fff;border-color:#fff}
 .fbtn i,.fbtn svg.lucide{width:1rem;height:1rem;flex:none}
 .mapbadge{position:absolute;top:.85rem;left:.85rem;background:var(--blue);color:#fff;font-size:.72rem;font-weight:700;
@@ -1314,7 +1323,6 @@ const SECTIONS=[
   {href:"#/types",k:"Types of Commons",q:"A living landscape",d:"Forest, water, pasture, coastal, cultural — spotlight & local-names map."},
   {href:"#/significance",k:"Significance",q:"Why they matter",d:"Ecological, social, economic value + threats, mapped state-wise."},
   {href:"#/commoning",k:"Commoning Around Us",q:"You are a commoner",d:"Field stories, films and galleries of everyday commoning."},
-  {href:"#/library",k:"Resources",q:"Knowledge hub",d:"Searchable repository of research, infographics and datasets."},
   {href:"#/contribute",k:"Contribute",q:"Crowdsourcing",d:"Add a local name or rule with GPS — reviewed before publishing."}
 ];
 const STORIES=[
@@ -1391,8 +1399,8 @@ const TYPE_META={
   coastal:{icon:"waves",c:"coastal",color:"var(--t-coastal)"},
   cultural:{icon:"landmark",c:"cultural",color:"var(--t-cultural)"}
 };
-const SECTION_ICONS=["lightbulb","layers","heart-handshake","users","library","map-pin-plus"];
-const SECTION_IMG=["card-what.jpg","card-types.jpg","card-significance.jpg","card-commoning.jpg","card-resources.jpg","card-contribute.jpg"];
+const SECTION_ICONS=["lightbulb","layers","heart-handshake","users","map-pin-plus"];
+const SECTION_IMG=["card-what.jpg","card-types.jpg","card-significance.jpg","card-commoning.jpg","card-contribute.jpg"];
 const VIDEO_CHANNEL="Foundation For Ecological Security";
 const VIDEOS=[
   {id:"Rjke-sidlE8",title:"7 Films",thumb:"video-1.jpg"},
@@ -1416,6 +1424,51 @@ function chapterImage(c,i){
 const THEME_BADGE={Forest:"b-forest",Pasture:"b-pasture",Water:"b-water",Coastal:"b-coastal",Cultural:"b-cultural",All:"b-all"};
 
 /* ============ AUTH STATE ============ */
+/* Administrative hierarchy — SAMPLE data for the prototype.
+   Replace with the platform's Admin Hierarchy service (SRS §5).
+   Shape: State → District → Block / Tehsil → Gram Panchayat → Village */
+const ADMIN={
+  "Maharashtra":{
+    "Pune":{"Haveli":{"Khed Shivapur":["Khed Shivapur","Kondhanpur","Sangrun"],"Wagholi":["Wagholi","Kesnand","Lonikand"]},
+            "Mulshi":{"Paud":["Paud","Male","Ghotawade"],"Pirangut":["Pirangut","Bhukum","Kasar Amboli"]}},
+    "Kolhapur":{"Karvir":{"Kalambe":["Kalambe","Pachgaon","Ujalaiwadi"]},"Panhala":{"Kotoli":["Kotoli","Borpadale","Nigave"]}}},
+  "Rajasthan":{
+    "Barmer":{"Baytu":{"Baytu Bhopji":["Baytu Bhopji","Kavas","Bhimda"]},"Sheo":{"Harsani":["Harsani","Rajbera","Undoo"]}},
+    "Jaisalmer":{"Sam":{"Kanoi":["Kanoi","Sam","Damodara"]},"Fatehgarh":{"Kolu":["Kolu Pabuji","Chandan","Devikot"]}}},
+  "Kerala":{
+    "Thrissur":{"Chalakudy":{"Kodakara":["Kodakara","Mattathur","Puthenchira"]}},
+    "Kollam":{"Kollam":{"Neendakara":["Neendakara","Puthenthura","Thangassery"]}}},
+  "Tamil Nadu":{
+    "Madurai":{"Vadipatti":{"Alanganallur":["Alanganallur","Silaiman","Kallandhiri"]}},
+    "Sivaganga":{"Tiruppuvanam":{"Kalaiyarkoil":["Kalaiyarkoil","Sakkottai","Nerkuppai"]}}},
+  "Odisha":{"Nayagarh":{"Ranpur":{"Badapandusar":["Badapandusar","Kantilo","Godipada"]}}},
+  "Gujarat":{"Kutch":{"Bhuj":{"Nakhatrana":["Nakhatrana","Dhrang","Kotay"]}}},
+  "Uttarakhand":{"Almora":{"Hawalbagh":{"Kausani":["Kausani","Someshwar","Garur"]}}}
+};
+const ADM_LEVELS=[
+  {id:'cf-state',   label:'State',              ph:'Select state…'},
+  {id:'cf-district',label:'District',           ph:'Select district…'},
+  {id:'cf-block',   label:'Block / Tehsil',     ph:'Select block…'},
+  {id:'cf-gp',      label:'Gram Panchayat',     ph:'Select gram panchayat…'},
+  {id:'cf-village', label:'Village',            ph:'Select village…'}
+];
+function admValue(i){const e=document.getElementById(ADM_LEVELS[i].id);return e&&e.value?e.value:''}
+function admNodeAt(depth){
+  let node=ADMIN;
+  for(let i=0;i<depth;i++){ const v=admValue(i); if(!v||!node[v]) return null; node=node[v]; }
+  return node;
+}
+/* repopulate the level below the one that changed, and clear everything deeper */
+function admChange(changed){
+  for(let i=changed+1;i<ADM_LEVELS.length;i++){
+    const sel=document.getElementById(ADM_LEVELS[i].id); if(!sel) continue;
+    const node=admNodeAt(i);
+    const list=Array.isArray(node)?node:(node?Object.keys(node):[]);
+    sel.innerHTML=`<option value="">${ADM_LEVELS[i].ph}</option>`
+      +list.map(x=>`<option>${x}</option>`).join("");
+    sel.disabled=!list.length;
+  }
+}
 const USER={name:"Priya Sharma",photo:"",email:"priya@indiaobservatory.org",phone:"+91 98765 43210",place:"Bengaluru, India",since:"May 2026"};
 let currentRole=null;
 let loginRole=ROLES.length-1;
@@ -1897,7 +1950,7 @@ screens.home=()=>shell("#/home",null,`
   <div class="ehero-after">
   <section class="section"><div class="mx">
     <div class="sechead">
-      <div><h2>Six areas to explore</h2>
+      <div><h2>${['','One','Two','Three','Four','Five','Six'][SECTIONS.length]||SECTIONS.length} areas to explore</h2>
         <p class="sub">The module is organised around the idea, its forms, its significance, and how people take part.</p></div>
     </div>
     <div class="grid g3">${SECTIONS.map((s,i)=>`
@@ -2085,7 +2138,10 @@ screens.types=()=>{
         <div class="fgrouplabel" style="margin-top:1.1rem">Type of common</div>
         <div class="filterlist" id="type-filters">
           ${TYPES.map((t,i)=>`<button class="fbtn ${i===ti?'active':''}" onclick="typeFilter(${i},this)">
-            ${ic(TYPE_META[t.id].icon)} ${t.num.replace(/^0/,'')}. ${t.name}</button>`).join("")}
+            ${ic(TYPE_META[t.id].icon)} ${t.num.replace(/^0/,'')}. ${t.name}</button>
+            ${t.sub?`<div class="fsub">${t.sub.map(sb=>`
+              <button class="fbtn sub" onclick="typeFilter(${i},null,false,'${sb[0]}',this)">
+                ${ic(sb[0]==='Oral Epics'?'scroll-text':'trees')} ${sb[0]}</button>`).join("")}</div>`:''}`).join("")}
         </div>
       </div>
       <div class="sigmap">
@@ -2094,10 +2150,16 @@ screens.types=()=>{
         <div class="mapwrap">
           <div id="typeMap" class="leafmap"></div>
           <div id="map-empty" class="ph" style="display:none">${tile('map-pinned','blue')}
-            <b>No local names recorded yet for this type</b>
-            <span>contributions appear here once published</span></div>
+            <b id="map-empty-t">No local names recorded yet for this type</b>
+            <span>published contributions appear here — <a onclick="go('#/contribute')" style="color:var(--blue);font-weight:700;cursor:pointer">add one</a></span></div>
         </div>
       </div>
+    </div>
+    <div class="callout mt24">
+      <div class="row" style="align-items:center;gap:1rem;flex:1;min-width:16rem">${tile('map-pin-plus')}
+        <div class="tx"><strong>Know a local name that isn't on this map?</strong>
+        <span>Add the name your community uses — with its district and village — and a reviewer will put it on the map.</span></div></div>
+      <button class="btn btn-primary arrow" onclick="go('#/contribute')">Contribute a local name ${ic('arrow-right')}</button>
     </div>
   </div></section>
   </div>
@@ -2388,16 +2450,19 @@ screens.contribute=(p)=>{
         </div>
         <div class="field"><label>${kind==='rule'?'Describe the local rule':'Describe the common'} <span class="req">*</span></label>
           <textarea id="cf-desc" placeholder="${kind==='rule'?'Which rule, who follows it, how it is enforced…':'Who uses it, how it is governed…'}"></textarea></div>
-        <div class="grid g2" style="gap:1rem" id="fld-state">
-          <div class="field"><label>State <span class="req">*</span></label>
-            <div class="selw"><select id="cf-state"><option>Select state…</option>
-              ${["Maharashtra","Rajasthan","Kerala","Tamil Nadu","Odisha","Gujarat"].map(s=>`<option>${s}</option>`).join("")}
-            </select>${ic('chevron-down','cv')}</div></div>
-          <div class="field"><label>District <span class="req">*</span></label>
-            <div class="selw"><select id="cf-district"><option>Select district…</option>
-              ${["Pune","Kolhapur","Sindhudurg"].map(s=>`<option>${s}</option>`).join("")}
-            </select>${ic('chevron-down','cv')}</div></div>
+        <div class="admgrid" id="fld-state">
+          ${ADM_LEVELS.map((lv,i)=>`
+            <div class="field">
+              <label>${lv.label} <span class="req">*</span></label>
+              <div class="selw">
+                <select id="${lv.id}" onchange="admChange(${i})" ${i?'disabled':''}>
+                  <option value="">${lv.ph}</option>
+                  ${i===0?Object.keys(ADMIN).map(x=>`<option>${x}</option>`).join(""):''}
+                </select>${ic('chevron-down','cv')}
+              </div>
+            </div>`).join("")}
         </div>
+        <div class="hint admnote">${ic('info')} Sample hierarchy for the prototype — to be wired to the platform's Admin Hierarchy service.</div>
         <div class="field" id="fld-gps"><label>GPS location <span class="req">*</span></label>
           <div class="gpsfield" onclick="useMyLocation()" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;border:1px solid var(--line-2);border-radius:.6rem;padding:.6rem .65rem .6rem .9rem;cursor:pointer;background:#fff">
             <span id="gps-val" style="font-size:.9rem;color:var(--muted-2);display:inline-flex;align-items:center;gap:.45rem">${ic('locate')} Not set — tap to detect</span>
@@ -2913,9 +2978,8 @@ function submitContribution(kind){
   const g=id=>{const e=document.getElementById(id);return e&&e.value?e.value.trim():''};
   const type=kind==='rule'?'Local Rule':'Local Name';
   const name=g('cf-name')||(kind==='rule'?'Untitled local rule':'Untitled common');
-  let state=g('cf-state'); if(!state||/^select/i.test(state)) state='—';
-  let district=g('cf-district'); if(/^select/i.test(district)) district='';
-  const loc=district?state+' · '+district:state;
+  const parts=ADM_LEVELS.map(lv=>{const e=document.getElementById(lv.id);return e&&e.value?e.value:''}).filter(Boolean);
+  const loc=parts.length?parts.join(' · '):'—';
   USER_SUBS.unshift([type,name,loc,'Pending']);
   saveSubs();
   go('#/contribute?submitted='+kind);
@@ -2945,6 +3009,7 @@ const STATE_LL={
 let mapQuery='', mapStateFilter='';
 function namesForType(i){
   const key=TYPES[i].name.replace(' Commons','');
+  if(curTypeSub) return {};   /* sub-types have no state-level entries recorded yet */
   const q=mapQuery.trim().toLowerCase();
   const byState={};
   LOCAL_NAMES
@@ -3000,6 +3065,8 @@ function drawTypeMarkers(i){
   if(nc) nc.textContent=names;
   const empty=document.getElementById('map-empty');
   if(empty) empty.style.display = names? 'none':'flex';
+  const et=document.getElementById('map-empty-t');
+  if(et) et.textContent = curTypeSub ? 'No mapped entries yet for '+curTypeSub : 'No local names recorded yet for this type';
   if(names && (mapStateFilter||mapQuery)){
     const pts=Object.keys(byState).map(st=>STATE_LL[st]).filter(Boolean);
     if(pts.length) typeMap.fitBounds(L.latLngBounds(pts).pad(0.45),{maxZoom:6});
@@ -3075,14 +3142,16 @@ function sigMapFilter(i,el){
   drawSigMarkers(i);
   icons();
 }
-let curTypeIdx=0;
-function typeFilter(i,el,scroll){
-  const t=TYPES[i]; curTypeIdx=i;
+let curTypeIdx=0, curTypeSub=null;
+function typeFilter(i,el,scroll,sub,subEl){
+  const t=TYPES[i]; curTypeIdx=i; curTypeSub=sub||null;
   document.querySelectorAll('#type-filters .fbtn').forEach(b=>b.classList.remove('active'));
-  const btns=document.querySelectorAll('#type-filters .fbtn');
-  if(el){el.classList.add('active')} else if(btns[i]){btns[i].classList.add('active')}
+  if(subEl){ subEl.classList.add('active'); }
+  else if(el){ el.classList.add('active'); }
+  else { const btns=document.querySelectorAll('#type-filters .fbtn:not(.sub)'); if(btns[i])btns[i].classList.add('active'); }
+  const label=sub?t.name+' — '+sub:t.name;
   const title=document.getElementById('type-map-title');
-  if(title)title.innerHTML='<i data-lucide="map"></i> '+t.name+' — local names &amp; distribution';
+  if(title)title.innerHTML='<i data-lucide="map"></i> '+label+' — local names &amp; distribution';
   const phn=document.getElementById('type-map-phname');if(phn)phn.textContent=t.name;
   const phf=document.getElementById('type-map-phfile');if(phf)phf.textContent='drop file as '+t.id+'-commons-map.png';
   drawTypeMarkers(i);
