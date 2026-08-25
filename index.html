@@ -1164,6 +1164,34 @@ main{min-height:60vh;animation:fade .3s ease}
 @media(max-width:700px){.leafmap{height:24rem}}
 .mapwrap>img{width:100%;height:auto;display:block}
 
+/* ---- contribute: record-so-far map ---- */
+.cmapwrap{display:grid;grid-template-columns:17rem 1fr;gap:1.25rem;align-items:start}
+.cmap-rail{background:var(--bg-soft);border:1px solid var(--line);padding:1.25rem}
+.cstat{padding:.7rem 0;border-bottom:1px solid var(--line)}
+.cstat:first-child{padding-top:0}
+.cstat b{display:block;font-size:1.9rem;font-weight:800;color:var(--ink);line-height:1.1}
+.cstat span{font-size:.8rem;color:var(--muted);line-height:1.35;display:block;margin-top:.15rem}
+.cm-you{display:flex;gap:.6rem;align-items:flex-start;margin-top:.85rem;padding:.75rem;background:var(--green-soft);border:1px solid var(--green-line)}
+.cm-you i,.cm-you svg.lucide{width:1.05rem;height:1.05rem;color:var(--green-d);flex:none;margin-top:.1rem}
+.cm-you b{font-weight:800;color:var(--ink);font-size:.9rem}
+.cm-you span{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;line-height:1.4}
+.cm-leg{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--line)}
+.cm-legrow{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--muted-2);padding:.22rem 0;font-weight:600}
+.cm-legrow i{width:.7rem;height:.7rem;border-radius:50%;flex:none;display:block}
+.cm-gap{display:flex;gap:.6rem;align-items:flex-start;margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--line)}
+.cm-gap i,.cm-gap svg.lucide{width:1.05rem;height:1.05rem;color:var(--blue);flex:none;margin-top:.15rem}
+.cm-gap p{font-size:.8rem;color:var(--muted);line-height:1.55}
+.cm-gap b{color:var(--ink);font-weight:700}
+.cmap-canvas{border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-card)}
+.cmap-canvas .mapwrap{min-height:0}
+.mkpin.mine{border-color:var(--green-d);box-shadow:0 0 0 3px rgba(57,162,72,.28),0 6px 14px -4px rgba(20,30,60,.65)}
+.cwhy{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.25rem}
+.cwhy-c{background:var(--bg-soft);border:1px solid var(--line);padding:1.35rem}
+.cwhy-c b{display:block;font-size:1rem;color:var(--ink);font-weight:800;margin:.9rem 0 .4rem}
+.cwhy-c p{font-size:.87rem;color:var(--muted);line-height:1.65}
+@media(max-width:960px){.cmapwrap{grid-template-columns:1fr}.cwhy{grid-template-columns:1fr}}
+
+
 /* ---- landscape pin hover cards ---- */
 .lpin-card{position:absolute;width:19rem;max-width:80vw;background:#fff;border:1px solid var(--line-2);border-radius:0;
   box-shadow:0 22px 50px -18px rgba(43,54,116,.55);padding:.9rem;display:none;z-index:30;white-space:normal;cursor:default;text-align:left}
@@ -2305,8 +2333,8 @@ screens.commoning=()=>shell("#/commoning",null,`
     <div class="callout mt16">
       <div class="row" style="align-items:center;gap:1rem;flex:1;min-width:16rem">${tile('book-open','blue')}
         <div class="tx"><strong>Read the full Commoning stories</strong>
-        <span>Explore the complete stories on the Commons Platform website.</span></div></div>
-      <a class="btn btn-primary arrow" href="https://commonsplatform.in/" target="_blank" rel="noopener noreferrer">Visit Commons Platform ${ic('external-link')}</a>
+        <span>Hundreds of verified field stories from across India, on Commons Stories — part of the Commons Platform.</span></div></div>
+      <a class="btn btn-primary arrow" href="https://stories.indiaobservatory.org.in/" target="_blank" rel="noopener noreferrer">Visit Commons Stories ${ic('external-link')}</a>
     </div>
   </div></section>
   </div>
@@ -2431,11 +2459,48 @@ screens.contribute=(p)=>{
   return shell("#/contribute",null,modal+`
   <div class="pagehead"><div class="in">
     <div style="max-width:52rem">
-      <h1>Contribute a <em>Common</em></h1>
-      <p>Know a shared forest, grazing land, tank or grove near you? Help put it on the map. Add its <b>local name</b> — what your community calls it — or a <b>local rule</b> you follow to care for it. Every contribution is checked by a reviewer before it goes live, so the map stays trustworthy.</p>
+      <h1>Add what your community <em>knows</em></h1>
+      <p>Every entry on the map below was put there by someone who knows the place. The word your village uses for a grove, a tank or a grazing ground — and the rule you follow to care for it — is recorded in very few places anywhere else. Share it here, and it becomes part of a public record of India's commons.</p>
     </div>
   </div></div>
+
+  <section class="section" style="background:#fff"><div class="mx">
+    <div style="max-width:52rem;margin-bottom:1.5rem">
+      <h2 class="h2">The record so far</h2>
+      <p class="sub">Local names and rules that people have shared and reviewers have verified, mapped by state. Your entry joins this map once it is approved.</p>
+    </div>
+    <div class="cmapwrap">
+      <div class="cmap-rail">
+        <div class="cstat"><b id="cm-names">0</b><span>local names &amp; rules mapped</span></div>
+        <div class="cstat"><b id="cm-states">0</b><span>states represented</span></div>
+        <div class="cstat"><b id="cm-types">0</b><span>types of commons covered</span></div>
+        <div class="cm-you" id="cm-you" style="display:none">
+          ${ic('user-round-check')}<div><b id="cm-you-n">0</b> from you<span>your entries are highlighted on the map</span></div>
+        </div>
+        <div class="cm-leg">
+          <div class="fgrouplabel" style="margin:0 0 .6rem">Type of common</div>
+          ${TYPES.map(t=>`<div class="cm-legrow"><i style="background:var(--t-${t.id})"></i>${t.name.replace(' Commons','')}</div>`).join("")}
+        </div>
+        <div class="cm-gap">${ic('map-pin-plus')}<p><b id="cm-gapn">Large parts of the map are still empty.</b> Most districts have no recorded local name at all — including, very likely, yours.</p></div>
+      </div>
+      <div class="cmap-canvas">
+        <div class="sigmap-top"><span>${ic('map')} Published local names &amp; rules</span>
+          <span class="mapstats">verified entries only</span></div>
+        <div class="mapwrap"><div id="contribMap" class="leafmap"></div></div>
+      </div>
+    </div>
+    <div class="cwhy">
+      <div class="cwhy-c">${tile('tag','blue')}<b>A name is a record</b><p>A local term carries who uses a resource and how it is held. When the word goes, the claim it encodes usually goes with it.</p></div>
+      <div class="cwhy-c">${tile('scale','green')}<b>A rule is governance</b><p>Grazing turns, fishing seasons, harvest limits — written down, these become evidence that communities govern well.</p></div>
+      <div class="cwhy-c">${tile('landmark','amber')}<b>Records reach decisions</b><p>Commons are easiest to lose when they are invisible in the record. Mapped entries give researchers and officials something to point at.</p></div>
+    </div>
+  </div></section>
+
   <section class="section"><div class="mx">
+    <div style="max-width:52rem;margin-bottom:1.5rem">
+      <h2 class="h2">Add your entry</h2>
+      <p class="sub">Two minutes, and a reviewer takes it from there. Add a <b>local name</b> — what your community calls the place — or a <b>local rule</b> you follow to care for it.</p>
+    </div>
     <div class="grid" style="grid-template-columns:1fr 20rem;gap:1.75rem;align-items:start">
       <div class="panel" id="contrib-form" style="padding:1.75rem">
         <div class="kicker" style="margin-bottom:.6rem">What are you adding?</div>
@@ -2711,7 +2776,7 @@ screens.login=()=>`<main class="login-full">
     <div class="lg-form"><div class="lg-inner">
       ${brand()}
       <h1 class="lg-h1">Welcome back! 👋</h1>
-      <p class="lg-sub">Sign in to contribute local names and rules, and to review submissions. Browsing the module doesn't require an account.</p>
+      <p class="lg-sub">Your account is what lets your contribution be credited and reviewed. Browsing the module doesn't require one.</p>
 
       <div class="lgf"><label>Sign in as (role)</label>
         <div class="dd" id="loginRoleDD">
@@ -2743,7 +2808,7 @@ screens.login=()=>`<main class="login-full">
       <button class="lg-close" onclick="go('#/home')" aria-label="Close">${ic('x')}</button>
       <div class="lg-panel-in">
         <h2>A living record of the <em>commons</em>.</h2>
-        <p>Sign in to add the local names and rules your community uses, and help publish India's commons to the map.</p>
+        <p>Share your knowledge of local names of commons, and of the rules that govern them, with the larger knowledge commons on this platform.</p>
 
         <div class="lg-chips">
           <span class="lg-chip">${ic('tag')} Local names</span>
@@ -2955,8 +3020,7 @@ function render(){
   const {parts,params}=parseHash();
   const name=parts[0]||"home";
   let html;
-  if(name==="contribute" && currentRole==null){ location.hash='#/login'; return; }
-  else if(name==="contribute" && !roleCan('contribute')){ html=roleGate('Contribute','Your current role can\'t submit local names or rules.'); }
+  if(name==="contribute" && currentRole!=null && !roleCan('contribute')){ html=roleGate('Contribute','Your current role can\'t submit local names or rules.'); }
   else if(name==="admin" && currentRole==null){ html=gateScreen('Moderation','Sign in to open the moderation portal.'); }
   else if(name==="admin" && !roleCan('moderate')){ html=roleGate('Moderation','Your current role can\'t open the moderation portal.'); }
   else if(name==="type"){params.id=parts[1];html=screens.type(params);}
@@ -2971,6 +3035,8 @@ function render(){
   if(document.getElementById('typeMap')) setTimeout(initTypeMap,0);
   sigMap=null; sigMarkers=null;
   if(document.getElementById('sigMap')) setTimeout(initSigMap,0);
+  contribMap=null; contribMarkers=null;
+  if(document.getElementById('contribMap')) setTimeout(initContribMap,0);
   window.scrollTo(0,0);
 }
 function go(hash){ if(location.hash===hash){render();}else{location.hash=hash;} }
@@ -2978,6 +3044,9 @@ window.addEventListener("hashchange",render);
 
 /* ---------- CONTRIBUTE FLOW ---------- */
 function submitContribution(kind){
+  /* the page is open to everyone — an account is only needed to credit and review the entry */
+  if(currentRole==null){ toast('Your entry needs an account so it can be credited and reviewed'); go('#/login'); return; }
+  if(!roleCan('contribute')){ toast('Your current role can\'t submit local names or rules'); return; }
   const g=id=>{const e=document.getElementById(id);return e&&e.value?e.value.trim():''};
   const type=kind==='rule'?'Local Rule':'Local Name';
   const name=g('cf-name')||(kind==='rule'?'Untitled local rule':'Untitled common');
@@ -3074,6 +3143,51 @@ function drawTypeMarkers(i){
     const pts=Object.keys(byState).map(st=>STATE_LL[st]).filter(Boolean);
     if(pts.length) typeMap.fitBounds(L.latLngBounds(pts).pad(0.45),{maxZoom:6});
   }
+}
+
+/* ---- contribute page: map of everything already contributed ---- */
+let contribMap=null, contribMarkers=null;
+function contribData(){
+  /* published local names, plus the signed-in user's own approved entries */
+  const byState={};
+  LOCAL_NAMES.forEach(n=>{ (byState[n[1]]=byState[n[1]]||[]).push({label:n[0],type:n[2],mine:false}); });
+  let mine=0;
+  USER_SUBS.filter(x=>x[3]==='Published').forEach(x=>{
+    const st=(x[2]||'').split(' · ')[0];
+    if(!STATE_LL[st]) return;
+    mine++;
+    (byState[st]=byState[st]||[]).push({label:x[1],type:'',mine:true});
+  });
+  return {byState,mine};
+}
+function initContribMap(){
+  const el=document.getElementById('contribMap');
+  if(!el || !window.L) return;
+  contribMap=L.map(el,{scrollWheelZoom:false,zoomControl:true,attributionControl:true}).setView([22.4,80.0],4.6);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:10, minZoom:3
+  }).addTo(contribMap);
+  contribMarkers=L.layerGroup().addTo(contribMap);
+  const cs=getComputedStyle(document.documentElement);
+  const colour=t=>cs.getPropertyValue({Forest:'--t-forest',Pasture:'--t-pasture',Water:'--t-water',Coastal:'--t-coastal',Cultural:'--t-cultural'}[t]||'--blue').trim();
+  const {byState,mine}=contribData();
+  const types={}; let names=0, states=0;
+  Object.keys(byState).forEach(st=>{
+    const ll=STATE_LL[st]; if(!ll) return;
+    const list=byState[st];
+    states++; names+=list.length;
+    list.forEach(x=>{ if(x.type) types[x.type]=1; });
+    const anyMine=list.some(x=>x.mine);
+    const dom=(list.find(x=>x.type)||{}).type||'';
+    const icon=L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,15],
+      html:`<span class="mkpin${anyMine?' mine':''}" style="background:${colour(dom)}">${list.length}</span>`});
+    L.marker(ll,{icon}).addTo(contribMarkers)
+      .bindPopup(`<b>${st}</b><br>${list.map(x=>x.mine?'<b>'+x.label+'</b> (yours)':x.label).join(' · ')}`);
+  });
+  const set=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
+  set('cm-names',names); set('cm-states',states); set('cm-types',Object.keys(types).length);
+  const you=document.getElementById('cm-you');
+  if(you && mine){ you.style.display='flex'; set('cm-you-n',mine); }
 }
 
 /* significance map — one marker per state carrying Commons Matrix content */
