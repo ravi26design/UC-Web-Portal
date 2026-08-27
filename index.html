@@ -477,35 +477,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .callout .tx strong{display:block;font-size:1.02rem;color:var(--ink)}
 .callout .tx span{font-size:.9rem;color:var(--muted)}
 
-/* ---------- resource cards ---------- */
-.rcard{background:#fff;border:1px solid var(--line);border-radius:0;padding:1.4rem;display:flex;
-  flex-direction:column;gap:.85rem;box-shadow:var(--shadow-card);transition:.2s}
-.rcard:hover{box-shadow:var(--shadow-lift);border-color:var(--line-2);transform:translateY(-2px)}
-.rcard .rtop{display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start}
-.rcard h4{font-size:1rem;font-weight:700;line-height:1.4;margin:0}
-.rcard .purpose{color:var(--muted);font-size:.87rem;flex:1}
-.rcard .rfoot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding-top:.9rem;
-  border-top:1px solid var(--line)}
-.fmt{display:inline-flex;align-items:center;gap:.35rem;font-size:.74rem;font-weight:700;color:var(--muted-2);
-  text-transform:uppercase;letter-spacing:.05em}
-.fmt i,.fmt svg.lucide{width:.9rem;height:.9rem}
-
-/* filters */
-.layout-side{display:grid;grid-template-columns:17rem 1fr;gap:2rem;align-items:start}
-.filterbox{background:#fff;border:1px solid var(--line);border-radius:0;padding:1.35rem;position:sticky;top:5.5rem;
-  box-shadow:var(--shadow-card);max-height:calc(100vh - 7rem);overflow-y:auto;scrollbar-width:thin}
-.filterbox::-webkit-scrollbar{width:8px}
-.filterbox::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:999px;border:2px solid #fff}
-.fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
-.fhead h2{font-size:1.02rem}
 .clearbtn{font-size:.82rem;font-weight:700;color:var(--blue);background:none;border:0;padding:0}
 .clearbtn:hover{text-decoration:underline}
-.fgroup{padding:.9rem 0;border-top:1px solid var(--line)}
-.fgroup h3{font-size:.78rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 .6rem}
-.fgroup label{display:flex;align-items:center;gap:.55rem;padding:.28rem 0;font-size:.87rem;color:var(--muted);cursor:pointer}
-.fgroup label:hover{color:var(--ink)}
-.fgroup input[type=checkbox]{width:1rem;height:1rem;accent-color:var(--blue);cursor:pointer}
-@media(max-width:980px){.layout-side{grid-template-columns:1fr}.filterbox{position:static;max-height:none}}
 .layout-wide{display:grid;grid-template-columns:1fr 21rem;gap:2rem;align-items:start}
 @media(max-width:1080px){.layout-wide{grid-template-columns:1fr}}
 
@@ -997,76 +970,6 @@ main{min-height:60vh;animation:fade .3s ease}
   .acct-item{margin-bottom:0}.acct-h{display:none}
   .acct-h{display:none}.acct-item{border-color:var(--line-2);background:#fff}}
 
-/* ---- file / doc cards (Resources) ---- */
-.doccard{background:#fff;border:1px solid var(--line);border-radius:0;padding:1rem;display:flex;
-  flex-direction:column;box-shadow:var(--shadow-card);transition:.2s}
-.doccard:hover{box-shadow:var(--shadow-lift);border-color:var(--line-2);transform:translateY(-2px)}
-.doc-top{display:flex;align-items:center;gap:.65rem}
-.doc-fi{flex:none;width:2.2rem;height:2.2rem;border-radius:.55rem;display:grid;place-items:center;color:#fff}
-.doc-fi i,.doc-fi svg.lucide{width:1.1rem;height:1.1rem}
-.fi-pdf{background:#D93025}.fi-sheet{background:#188038}.fi-img{background:#1A73E8}
-.fi-vid{background:#7C3AED}.fi-doc{background:var(--ink)}
-.doc-name{flex:1;min-width:0;font-size:.88rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.doc-more{flex:none;width:1.75rem;height:1.75rem;border:0;background:none;border-radius:.4rem;color:var(--faint);display:grid;place-items:center}
-.doc-more:hover{background:var(--bg-soft);color:var(--ink)}
-.doc-more i,.doc-more svg.lucide{width:1rem;height:1rem}
-.doc-prev{border:1px solid var(--line);border-radius:.7rem;background:var(--bg-soft);padding:.9rem;margin:.85rem 0;
-  min-height:9rem;cursor:pointer;overflow:hidden;transition:.15s}
-.doc-prev:hover{border-color:var(--blue);background:#fff}
-.doc-foot{display:flex;align-items:center;gap:.55rem;padding-top:.8rem;border-top:1px solid var(--line);
-  font-size:.76rem;color:var(--muted-2);font-weight:600}
-.doc-foot .pw-av{width:1.6rem;height:1.6rem;font-size:.6rem}
-.doc-editing{display:flex;align-items:center;gap:.45rem;font-size:.74rem;color:var(--green-d);font-weight:600;padding-top:.6rem}
-.doc-editing .edot{width:.45rem;height:.45rem;border-radius:50%;background:var(--green);flex:none}
-/* mini preview primitives */
-.pv-line{height:.4rem;background:var(--line-2);border-radius:2px;margin:.5rem 0}
-.pv-head{height:.65rem;background:var(--ink);border-radius:2px;width:60%;margin-bottom:.7rem}
-.pv-box{border:1px solid var(--line-2);border-radius:.4rem;height:3rem;margin-top:.7rem;background:#fff}
-.pv-fill{min-height:7rem;height:100%;border-radius:.5rem;background:linear-gradient(135deg,var(--blue-soft),var(--green-soft));
-  display:grid;place-items:center;color:var(--muted-2);font-size:.78rem;font-weight:600;gap:.35rem}
-.pv-fill i,.pv-fill svg.lucide{width:1.4rem;height:1.4rem;color:var(--blue)}
-
-/* ---- document viewer (resource detail) ---- */
-.docview{min-height:34rem;display:flex;flex-direction:column;padding:1.1rem}
-.docview-body{flex:1;display:grid;place-items:center;padding:1.5rem;background:var(--bg-soft);border-radius:.7rem;
-  border:1px solid var(--line);overflow:auto}
-.dpage{background:#fff;border:1px solid var(--line-2);border-radius:.35rem;box-shadow:0 14px 40px -20px rgba(43,54,116,.45);
-  width:100%;max-width:33rem;padding:2.25rem 2.5rem;text-align:left}
-.dpage-h{font-size:1.1rem;font-weight:800;color:var(--ink);margin-bottom:.25rem;letter-spacing:-.01em}
-.dpage-sub{font-size:.68rem;color:var(--faint);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:1.25rem}
-.dpage-h2{font-size:.85rem;font-weight:800;color:var(--ink);margin:1.25rem 0 .6rem}
-.dtext{font-size:.8rem;line-height:1.75;color:var(--muted);margin:0 0 .7rem}
-.dul{margin:.2rem 0 0;padding-left:1.1rem;font-size:.8rem;line-height:1.75;color:var(--muted)}
-.dul li{margin-bottom:.35rem}
-.dpage-foot{margin-top:1.5rem;padding-top:.8rem;border-top:1px solid var(--line);font-size:.68rem;color:var(--faint);text-align:center}
-.dtable{width:100%;max-width:40rem;border:1px solid var(--line-2);border-radius:.5rem;overflow:hidden;background:#fff;
-  box-shadow:0 14px 40px -22px rgba(43,54,116,.4)}
-.dtable .tr{display:grid;grid-template-columns:1.4fr 1fr 1fr .8fr;border-top:1px solid var(--line)}
-.dtable .tr:first-child{border-top:0}
-.dtable .tr.th{background:var(--ink)}
-.dtable .cell{padding:.6rem .75rem;font-size:.76rem;border-left:1px solid var(--line);display:flex;align-items:center;color:var(--ink)}
-.dtable .cell:first-child{border-left:0}
-.dtable .tr.th .cell{color:#fff;font-weight:700;border-left-color:rgba(255,255,255,.16)}
-.dtable .tr:nth-child(even):not(.th){background:var(--bg-soft)}
-.dimg{width:100%;max-width:40rem;border:1px solid var(--line-2);border-radius:.6rem;overflow:hidden;background:#fff;
-  box-shadow:0 14px 40px -22px rgba(43,54,116,.4)}
-.dimg-h{background:var(--bg-soft);padding:.85rem 1rem;text-align:center;font-weight:800;font-size:.88rem;
-  border-bottom:1px solid var(--line);color:var(--ink)}
-.dimg-body{padding:1.75rem 1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:end;min-height:17rem}
-.mchart{display:flex;gap:.6rem;align-items:flex-end;height:10rem}
-.mbar{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(to top,var(--blue),#6f8fd8)}
-.mbar:nth-child(2){background:linear-gradient(to top,var(--green),#7fcb8b)}
-.mbar:nth-child(4){background:linear-gradient(to top,var(--green-d),#8fd39a)}
-.mpie{width:9.5rem;height:9.5rem;border-radius:50%;margin:0 auto;
-  background:conic-gradient(var(--blue) 0 40%,var(--green) 40% 70%,#c7d6f0 70% 100%)}
-.dlegend{grid-column:1/-1;display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;font-size:.72rem;color:var(--muted);font-weight:600}
-.dlegend span{display:inline-flex;align-items:center;gap:.4rem}
-.dlegend i{width:.7rem;height:.7rem;border-radius:3px;display:inline-block}
-.dvid{width:100%;max-width:40rem;aspect-ratio:16/9;background:var(--ink);border-radius:.6rem;display:grid;place-items:center;
-  box-shadow:0 14px 40px -22px rgba(43,54,116,.5)}
-.dplay{width:3.5rem;height:3.5rem;border-radius:50%;border:2px solid rgba(255,255,255,.85);color:#fff;display:grid;place-items:center}
-.dplay i,.dplay svg.lucide{width:1.4rem;height:1.4rem}
-
 /* ---- detail blocks ---- */
 .detail-blk{padding:.9rem 0;border-top:1px solid var(--line)}
 .detail-blk:first-of-type{border-top:0;padding-top:0}
@@ -1362,25 +1265,6 @@ const STORIES=[
   {id:"guj-pasture",title:"Herders of the grasslands",system:"Pasture",state:"Gujarat",excerpt:"Seasonal migration keeps both livestock and grassland alive across the year."}
 ];
 function storyById(id){return STORIES.find(s=>s.id===id)}
-const RES=[
-  {id:"our-commons",title:"Our Commons — publication",purpose:"A deep-dive reader on the commons of India.",type:"Publication",theme:"All",audience:"General",fmt:"PDF",lang:"English",tags:["Publication","Overview"]},
-  {id:"sacred-groves",title:"Sacred Groves of India — infographic",purpose:"Poster on India's sacred grove traditions.",type:"Infographic",theme:"Forest",audience:"Students",fmt:"PNG",lang:"English",tags:["Infographic","Forest"]},
-  {id:"commons-matrix",title:"Commons Matrix (state × theme)",purpose:"State- and theme-wise content dataset.",type:"Dataset",theme:"All",audience:"Researchers",fmt:"XLSX",lang:"English",tags:["Data","All states"]},
-  {id:"tank-systems",title:"Cascading Tank Systems — case study",purpose:"How tank irrigation commons are governed and revived.",type:"Case study",theme:"Water",audience:"Practitioners",fmt:"PDF",lang:"English",tags:["Case study","Water"]},
-  {id:"grazing-brief",title:"Pastoralism & Grazing Commons brief",purpose:"Policy brief on grazing commons and pastoralists.",type:"Policy brief",theme:"Pasture",audience:"Policymakers",fmt:"PDF",lang:"Hindi",tags:["Policy","Pasture"]},
-  {id:"coastal-essay",title:"Coastal Commons — photo essay",purpose:"Photo essay on shorelines and fishing commons.",type:"Story",theme:"Coastal",audience:"General",fmt:"PDF",lang:"English",tags:["Story","Coastal"]},
-  {id:"forest-rights-act",title:"Forest Rights Act — a plain-language explainer",purpose:"What the Forest Rights Act means for community forest governance.",type:"Guide",theme:"Forest",audience:"Practitioners",fmt:"PDF",lang:"English",tags:["Guide","Forest","Policy"]},
-  {id:"oral-epics",title:"Oral Epics of India — infographic",purpose:"A map of India's oral epic traditions and the communities that keep them.",type:"Infographic",theme:"Cultural",audience:"General",fmt:"PNG",lang:"English",tags:["Infographic","Cultural"]},
-  {id:"water-harvesting",title:"Traditional Water Harvesting — handbook",purpose:"Johads, tankas, eris and kunds — how communities harvest and share water.",type:"Guide",theme:"Water",audience:"Practitioners",fmt:"PDF",lang:"Hindi",tags:["Guide","Water"]},
-  {id:"pastoralism-atlas",title:"Pastoralists of India — atlas",purpose:"Grazing routes, seasonal pastures and the commons that sustain herders.",type:"Report",theme:"Pasture",audience:"Researchers",fmt:"PDF",lang:"English",tags:["Atlas","Pasture"]},
-  {id:"fisherfolk-voices",title:"Voices of the Fisherfolk — film",purpose:"Short film on self-governed fishing grounds and closed seasons.",type:"Film",theme:"Coastal",audience:"General",fmt:"MP4",lang:"English",tags:["Film","Coastal"]},
-  {id:"commoning-primer",title:"What is Commoning? — primer",purpose:"A short reader introducing commoning as an everyday practice.",type:"Publication",theme:"All",audience:"Students",fmt:"PDF",lang:"English",tags:["Publication","Overview"]},
-  {id:"local-names-dataset",title:"Local Names of Commons — dataset",purpose:"Crowdsourced local names for commons, by state and type.",type:"Dataset",theme:"All",audience:"Researchers",fmt:"CSV",lang:"English",tags:["Data","Local names"]},
-  {id:"significance-brief",title:"Why Commons Matter — policy brief",purpose:"Ecological, social and economic value of the commons, for policymakers.",type:"Policy brief",theme:"All",audience:"Policymakers",fmt:"PDF",lang:"English",tags:["Policy","Significance"]},
-  {id:"van-panchayat",title:"Van Panchayats of Uttarakhand — case study",purpose:"How village forest councils govern shared woodland.",type:"Case study",theme:"Forest",audience:"Practitioners",fmt:"PDF",lang:"Hindi",tags:["Case study","Forest"]},
-  {id:"sacred-groves-gazetteer",title:"Sacred Groves — a state gazetteer",purpose:"A directory of sacred groves and their local names across India.",type:"Dataset",theme:"Cultural",audience:"Researchers",fmt:"XLSX",lang:"English",tags:["Data","Cultural"]}
-];
-function resById(id){return RES.find(r=>r.id===id)}
 const ROLES=[
   ["Visitor","Browse & search; download documents and infographics"],
   ["Registered User","Browse & search; feedback & comment; contribute data"],
@@ -1604,7 +1488,6 @@ function header(active){
   </div>
   <div class="mobnav" id="mobnav">
     ${NAV.map(n=>`<a class="${active===n.id?'active':''}" onclick="closeMobNav();go('${n.id}')">${ic(n.icon)} ${n.label}</a>`).join("")}
-    <a onclick="closeMobNav();go('#/library')">${ic('library')} Resources</a>
     ${currentRole==null?`<a onclick="closeMobNav();go('#/login')">${ic('log-in')} Sign in</a>`:''}
   </div></nav>`;
 }
@@ -1629,7 +1512,6 @@ function footer(){
         <li onclick="go('#/commoning')">Commoning</li></ul></div>
       <div><h5>Participate</h5><ul>
         <li onclick="go('#/contribute')">Contribute Data</li>
-        <li onclick="go('#/library')">Resources</li>
         <li onclick="openSearch()">Search</li>
         <li onclick="go('#/help')">Help &amp; Flow</li>
         <li onclick="go('#/login')">Sign in</li></ul></div>
@@ -1800,90 +1682,6 @@ function imageFrame(src,alt,label,hint,extra){
   </div>`;
 }
 
-/* ---- resource / file helpers ---- */
-const RES_PEOPLE=[["PS","You"],["KM","Kavita Menon"],["AJ","Aditi Joshi"],["KI","Krishnan Iyer"],["SJ","Sarah Johnson"],["MP","Manish Patel"]];
-function resIndex(r){return Math.max(0,RES.findIndex(x=>x.id===r.id));}
-function resMeta(i){const p=RES_PEOPLE[i%RES_PEOPLE.length];return {ini:p[0],name:p[1],date:'2026-05-'+String(24-(i%9)).padStart(2,'0'),size:(1+((i*5)%9))+'.'+((i*3)%9)+' MB'};}
-function fileKind(f){return ({PDF:'Document',XLSX:'Spreadsheet',CSV:'Dataset',PNG:'Image',MP4:'Video',DOCX:'Document',PPTX:'Slides'})[f]||'Document';}
-function fileStyle(f){
-  if(f==='XLSX'||f==='CSV') return {cls:'fi-sheet',icon:'table'};
-  if(f==='PNG') return {cls:'fi-img',icon:'image'};
-  if(f==='MP4') return {cls:'fi-vid',icon:'clapperboard'};
-  if(f==='PPTX') return {cls:'fi-doc',icon:'presentation'};
-  return {cls:'fi-pdf',icon:'file-text'};
-}
-function docPreview(r){
-  if(r.fmt==='XLSX'||r.fmt==='CSV') return `<div class="pv-head"></div>`+[1,2,3,4,5,6].map(()=>'<div class="pv-line"></div>').join('');
-  if(r.fmt==='PNG') return `<div class="pv-fill">${ic('image')}Infographic</div>`;
-  if(r.fmt==='MP4') return `<div class="pv-fill">${ic('play')}Film</div>`;
-  return `<div class="pv-line" style="width:40%;height:.55rem;background:var(--ink)"></div>
-    <div class="pv-line" style="width:90%"></div><div class="pv-line" style="width:80%"></div>
-    <div class="pv-line" style="width:85%"></div><div class="pv-box"></div>`;
-}
-function docPage(r){
-  if(r.fmt==='PNG') return `<div class="dimg">
-    <div class="dimg-h">${r.title}</div>
-    <div class="dimg-body">
-      <div class="mchart">${[42,72,55,92,38].map(h=>`<div class="mbar" style="height:${h}%"></div>`).join('')}</div>
-      <div class="mpie"></div>
-      <div class="dlegend">
-        <span><i style="background:var(--blue)"></i>Forest</span>
-        <span><i style="background:var(--green)"></i>Water &amp; pasture</span>
-        <span><i style="background:#c7d6f0"></i>Coastal &amp; cultural</span></div>
-      <div style="grid-column:1/-1;text-align:center;font-size:.75rem;color:var(--faint)">Share of commons by type across 28 states · Source: Our Commons</div>
-    </div></div>`;
-  if(r.fmt==='XLSX'||r.fmt==='CSV'){
-    const data=[["Rajasthan","Pasture","High","2026"],["Kerala","Coastal","Medium","2026"],["Nagaland","Forest","High","2025"],
-      ["Tamil Nadu","Water","High","2026"],["Meghalaya","Cultural","Medium","2025"],["Gujarat","Pasture","Medium","2026"],["Odisha","Forest","High","2025"]];
-    return `<div class="dtable"><div class="tr th">${['State','Theme','Significance','Year'].map(h=>`<div class="cell">${h}</div>`).join('')}</div>
-      ${data.map(row=>`<div class="tr">${row.map(c=>`<div class="cell">${c}</div>`).join('')}</div>`).join('')}</div>`;
-  }
-  if(r.fmt==='MP4') return `<div class="dvid"><div class="dplay">${ic('play')}</div></div>`;
-  return `<div class="dpage">
-    <div class="dpage-h">${r.title}</div>
-    <div class="dpage-sub">${r.type} · ${r.theme} · ${r.lang} · India Observatory</div>
-    <p class="dtext">Commons are tangible and intangible resources used and managed by communities or collectives for their shared benefit — from land, water and forests to cultural knowledge and the digital. This ${r.type.toLowerCase()} examines how communities across India govern, sustain and revive their commons.</p>
-    <div class="dpage-h2">1. Overview</div>
-    <p class="dtext">Across states, local institutions such as van panchayats, gram sabhas and fisher associations set customary rules that decide who may use a common, when, and how much — the rules that keep commons sustainable across generations.</p>
-    <div class="dpage-h2">2. Key findings</div>
-    <ul class="dul">
-      <li>Community-governed commons show stronger ecological outcomes than open-access lands.</li>
-      <li>Local names and rules for commons vary widely by region and resource type.</li>
-      <li>Recognition of community rights is the single biggest driver of stewardship.</li>
-    </ul>
-    <p class="dtext">See the accompanying Commons Matrix for state- and theme-wise detail.</p>
-    <div class="dpage-foot">Page 1 of 12 · Our Commons · Commons Platform · 2026</div>
-  </div>`;
-}
-function resourceCard(r,i){
-  i=i||0;
-  const m=resMeta(i), fs=fileStyle(r.fmt);
-  const editing=(i%4===1)?RES_PEOPLE[(i+2)%RES_PEOPLE.length][1]+' is editing':((i%4===2)?'You are editing':'');
-  return `<article class="doccard">
-    <div class="doc-top">
-      <span class="doc-fi ${fs.cls}">${ic(fs.icon)}</span>
-      <b class="doc-name" title="${r.title}">${r.title}</b>
-      <button class="doc-more" onclick="toast('Options (placeholder)')" aria-label="Options">${ic('ellipsis-vertical')}</button>
-    </div>
-    <div class="doc-prev" onclick="go('#/resource/${r.id}')">${docPreview(r)}</div>
-    <div class="doc-foot"><span class="pw-av">${m.ini}</span><span>${m.name} · ${m.date}</span></div>
-    ${editing?`<div class="doc-editing"><span class="edot"></span>${editing}</div>`:''}
-  </article>`;
-}
-function filterSidebar(){
-  const box=(items)=>items.map(i=>`<label><input type="checkbox"> ${i}</label>`).join("");
-  return `<aside><div class="filterbox">
-    <div class="fhead"><h2>Filters</h2><button class="clearbtn" onclick="toast('Filters cleared (placeholder)')">Clear all</button></div>
-    <div class="fgroup"><h3>Format</h3>${box(["PDF documents","Infographics","Datasets","Films"])}</div>
-    <div class="fgroup"><h3>Type of Common</h3>${box(TYPES.map(t=>t.name.replace(' Commons','')))}</div>
-    <div class="fgroup"><h3>Audience</h3>${box(["General public","Students","Researchers","Policymakers"])}</div>
-    <div class="fgroup"><h3>Language</h3>${box(["English","Hindi","Other"])}</div>
-    <div class="row mt16" style="gap:.5rem">
-      <button class="btn btn-primary sm" style="flex:1" onclick="toast('Filters applied (placeholder)')">Apply</button>
-      <button class="btn btn-outline sm" style="flex:1" onclick="toast('Cleared (placeholder)')">Clear</button>
-    </div>
-  </div></aside>`;
-}
 const WORKFLOW=[
   {t:"Pending",r:"contributor"},{t:"Reviewed",r:"moderator"},{t:"Approved",r:"moderator / admin"},{t:"Published",r:"admin"}
 ];
@@ -1902,7 +1700,7 @@ const SIG=[
      ["Climate buffer","Forests and grasslands store carbon and cool local microclimates."],
      ["Living soils","Grazing lands and woodlands keep soils fertile and support pollinators."]],
    states:["Nagaland — community forests","Tamil Nadu — cascading tanks","Rajasthan — oran groves"],
-   link:["Sacred Groves infographic","#/resource/sacred-groves"]},
+  },
   {key:"Social and Cultural",tag:"Social and Cultural Significance",
    lead:"Commons hold identity, faith and shared knowledge — the social fabric that binds communities together.",
    map:"Socio-cultural layer — sacred & shared landscapes",
@@ -1916,7 +1714,7 @@ const SIG=[
      ["Community institutions","Collective care builds trust, cooperation and local self-governance."],
      ["Inclusion","Commons give the landless and marginalised a real stake in resources."]],
    states:["Meghalaya — sacred forests","Kerala — kavu groves","Odisha — community tanks"],
-   link:["Our Commons — publication","#/resource/our-commons"]},
+  },
   {key:"Economic",tag:"Economic Significance",
    lead:"Commons are a quiet economy — fodder, fuel, food and a safety-net that rural households depend on.",
    map:"Economic layer — livelihoods, fisheries & produce",
@@ -1930,7 +1728,7 @@ const SIG=[
      ["Household safety-net","Commons cushion families through drought and lean seasons."],
      ["Local enterprise","Honey, bamboo, craft and eco-tourism build on the commons."]],
    states:["Gujarat — grazing commons","Kerala — coastal fisheries","Madhya Pradesh — NTFP forests"],
-   link:["Grazing Commons brief","#/resource/grazing-brief"]},
+  },
   {key:"Threats and Challenges",tag:"Threats and Challenges",
    lead:"Commons are under pressure — shrinking, degrading and slipping out of community control across states.",
    map:"Pressure layer — encroachment, degradation & tenure gaps",
@@ -1971,7 +1769,7 @@ screens.home=()=>shell("#/home",null,`
     <div class="stand">
       <p>An educational module that introduces the idea of Commons, their diverse local names and significance, and the acts of commoning that sustain them across India.</p>
       <div class="row">
-        <button class="btn btn-outline" onclick="go('#/contribute')">${ic('map-pin-plus')} Contribute</button>
+        <button class="btn btn-primary arrow" onclick="go('#/contribute')">${ic('map-pin-plus')} Contribute ${ic('arrow-right')}</button>
       </div>
     </div>
   </div></div>
@@ -2354,85 +2152,6 @@ screens.story=(p)=>{const s=storyById(p.id)||STORIES[0];
     </div>
     <div class="row mt24">
       <button class="btn btn-outline" onclick="go('#/commoning')">${ic('arrow-left')} All stories</button>
-    </div>
-  </div></section>
-`);};
-
-/* ---------- RESOURCES ---------- */
-screens.library=()=>shell(null,[{label:"Home",href:"#/home"},{label:"Resources"}],`
-  <div class="pagehead"><div class="in">
-    <div style="max-width:50rem">
-      <span class="eyebrow"><span class="pd"></span>Knowledge hub</span>
-      <h1>Resources</h1>
-      <p>Research, publications, infographics and datasets on India's commons — search, filter and download.</p>
-    </div>
-    <button class="btn btn-primary" onclick="libUpload()">${ic('upload')} Upload a resource</button>
-  </div></div>
-  <section class="section" style="background:var(--bg-soft)"><div class="mx">
-    <div class="layout-side">
-      ${filterSidebar()}
-      <div>
-        <div class="searchwrap" style="margin-bottom:1.5rem">
-          ${ic('search','ico')}
-          <input placeholder="Search resources — e.g. sacred groves, tanks…" onkeydown="if(event.key==='Enter'){toast('Searching (placeholder)')}">
-          <button class="searchgo" onclick="toast('Searching (placeholder)')">Search</button>
-        </div>
-        <div class="between" style="margin-bottom:1rem">
-          <span class="muted" style="font-size:.83rem;font-weight:600">${RES.length} resources</span>
-          <div class="selw"><select onchange="toast('Sorted by '+this.value)">
-            <option>Latest</option><option>Most downloaded</option><option>A → Z</option></select>${ic('chevron-down','cv')}</div>
-        </div>
-        <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:1.1rem">
-          ${RES.map((r,i)=>resourceCard(r,i)).join("")}
-        </div>
-      </div>
-    </div>
-  </div></section>
-`);
-
-/* ---------- RESOURCE / DOCUMENT VIEW ---------- */
-screens.resource=(p)=>{
-  const r=resById(p.id)||RES[0], i=resIndex(r), m=resMeta(i), fs=fileStyle(r.fmt);
-  return shell(null,[{label:"Home",href:"#/home"},{label:"Resources",href:"#/library"},{label:r.title}],`
-  <section class="section"><div class="mx">
-    <div class="between" style="margin-bottom:1.25rem">
-      <button class="btn btn-outline" onclick="go('#/library')">${ic('arrow-left')} Resources</button>
-      <div class="row" style="gap:.5rem">
-        <button class="btn btn-outline" onclick="toast('Shared (placeholder)')">${ic('share-2')} Share</button>
-        <button class="btn btn-primary" onclick="toast('Download — ${r.title.replace(/'/g,"")} (placeholder)')">${ic('download')} Download</button>
-      </div>
-    </div>
-    <div class="row" style="align-items:center;gap:.85rem;margin-bottom:1.25rem">
-      <span class="doc-fi ${fs.cls}" style="width:2.6rem;height:2.6rem;border-radius:.65rem">${ic(fs.icon)}</span>
-      <div><h1 style="font-size:1.6rem">${r.title}</h1>
-        <p class="muted" style="font-size:.9rem;margin-top:.2rem">${r.purpose}</p></div>
-    </div>
-    <div class="grid" style="grid-template-columns:1.7fr 1fr;gap:1.75rem;align-items:start">
-      <div class="panel docview">
-        <div class="between" style="margin-bottom:.9rem">
-          <div class="kicker">${r.fmt} preview</div>
-          <div class="row" style="gap:.4rem">
-            <button class="iconbtn" onclick="toast('Zoom out (placeholder)')" aria-label="Zoom out">${ic('minus')}</button>
-            <button class="iconbtn" onclick="toast('Zoom in (placeholder)')" aria-label="Zoom in">${ic('plus')}</button>
-            <button class="iconbtn" onclick="toast('Full screen (placeholder)')" aria-label="Full screen">${ic('maximize-2')}</button>
-          </div>
-        </div>
-        <div class="docview-body">${docPage(r)}</div>
-      </div>
-      <div class="panel">
-        <h3 style="font-size:1.05rem;margin-bottom:1rem">Document Details</h3>
-        <div class="detail-blk"><div class="k">Theme</div><div class="v-lg">${r.theme}</div></div>
-        <div class="detail-blk"><div class="k">File Type</div><div><span class="tag">${ic(fs.icon)} ${fileKind(r.fmt)}</span></div></div>
-        <div class="detail-blk"><div class="k">Category</div><div class="v-lg">${r.type}</div></div>
-        <div class="detail-blk"><div class="k">Visibility</div><div><span class="tag solid">${ic('globe')} Public</span></div></div>
-        <div class="detail-blk"><div class="k">File Size</div><div class="v-lg">${m.size}</div></div>
-        <div class="detail-blk"><div class="k">Version</div><div class="v-lg">v1.0</div></div>
-        <div class="detail-blk"><div class="k">Uploaded By</div>
-          <div class="row" style="gap:.65rem;align-items:center"><span class="pw-av">${m.ini}</span>
-            <div><b style="font-size:.9rem">${m.name}</b><div class="muted" style="font-size:.78rem">${m.date}</div></div></div></div>
-        <div class="detail-blk"><div class="k">Tags</div>
-          <div class="tags">${r.tags.map(t=>`<span class="tag">${t}</span>`).join('')}<span class="tag">${r.fmt}</span></div></div>
-      </div>
     </div>
   </div></section>
 `);};
@@ -2964,19 +2683,19 @@ function roleGate(title,msg){
 
 /* ---------- SEARCH OVERLAY ---------- */
 function searchOverlayHTML(){
-  const sugg=["Sacred groves","Cascading tanks","Grazing commons","Local names","Commons Matrix","Coastal"];
+  const sugg=[["Sacred groves","#/type/cultural"],["Cascading tanks","#/type/water"],["Grazing commons","#/type/pasture"],
+              ["Local names","#/types"],["Commoning stories","#/commoning"],["Coastal","#/type/coastal"]];
   return `<div class="between" style="margin-bottom:.35rem">
       <h3 style="font-size:1.25rem">What are you looking for?</h3>
       <button class="iconbtn" onclick="closeSearch()" aria-label="Close">${ic('x')}</button></div>
-    <p class="muted" style="font-size:.9rem">Search resources, stories, local names or keywords.</p>
+    <p class="muted" style="font-size:.9rem">Search local names, stories or keywords across the module.</p>
     <div class="searchwrap mt16">${ic('search','ico')}
       <input id="overlay-input" placeholder="Type to search…" onkeydown="if(event.key==='Enter'){runSearch()}">
       <button class="searchgo" onclick="runSearch()">Search</button></div>
     <div class="kicker mt24" style="margin-bottom:.6rem">Recent &amp; popular</div>
-    <div class="chips">${sugg.map(s=>`<span class="chip" onclick="closeSearch();go('#/library')">${ic('search')} ${s}</span>`).join("")}</div>
+    <div class="chips">${sugg.map(s=>`<span class="chip" onclick="closeSearch();go('${s[1]}')">${ic('search')} ${s[0]}</span>`).join("")}</div>
     <div class="kicker mt24" style="margin-bottom:.6rem">Jump to a section</div>
-    <div class="chips">${NAV.map(n=>`<span class="chip" onclick="closeSearch();go('${n.id}')">${ic(n.icon)} ${n.label}</span>`).join("")}
-      <span class="chip" onclick="closeSearch();go('#/library')">${ic('library')} Resources</span></div>`;
+    <div class="chips">${NAV.map(n=>`<span class="chip" onclick="closeSearch();go('${n.id}')">${ic(n.icon)} ${n.label}</span>`).join("")}</div>`;
 }
 function openSearch(){
   const p=document.getElementById("searchPanel");
@@ -2986,7 +2705,7 @@ function openSearch(){
   setTimeout(()=>{const i=document.getElementById("overlay-input");if(i)i.focus()},30);
 }
 function closeSearch(){document.getElementById("searchOverlay").classList.remove("open")}
-function runSearch(){closeSearch();go('#/library')}
+function runSearch(){closeSearch();go('#/types');toast('Search across the module (placeholder)')}
 /* click-to-play: swap the thumbnail for the YouTube player (privacy-enhanced domain) */
 function playVideo(btn,id){
   const w=document.createElement('div');
@@ -3004,7 +2723,6 @@ function togglePw(e){
   e.currentTarget.innerHTML='<i data-lucide="'+(show?'eye':'eye-off')+'"></i>';
   icons();
 }
-function libUpload(){ currentRole==null ? go('#/login') : toast('Upload a resource (placeholder)') }
 
 /* ---------- ROUTER ---------- */
 function parseHash(){
@@ -3024,7 +2742,6 @@ function render(){
   else if(name==="admin" && !roleCan('moderate')){ html=roleGate('Moderation','Your current role can\'t open the moderation portal.'); }
   else if(name==="type"){params.id=parts[1];html=screens.type(params);}
   else if(name==="story"){params.id=parts[1];html=screens.story(params);}
-  else if(name==="resource"){params.id=parts[1];html=screens.resource(params);}
   else if(name==="submission"){params.src=parts[1];params.idx=parts[2];html=screens.submission(params);}
   else if(screens[name]){html=screens[name](params);}
   else{html=screens.home();}
