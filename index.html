@@ -369,18 +369,6 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .tc-go i,.tc-go svg.lucide{width:.9rem;height:.9rem;transition:transform .15s}
 .tcard:hover .tc-go i,.tcard:hover .tc-go svg.lucide{transform:translateX(3px)}
 
-/* journey / pathway strip */
-.pathway{display:flex;gap:.6rem;flex-wrap:wrap;align-items:stretch}
-.pw-step{flex:1 1 9rem;min-width:8.5rem;background:#fff;border:1px solid var(--line);border-radius:.8rem;
-  padding:.8rem .9rem;cursor:pointer;transition:.15s;box-shadow:0 1px 2px rgba(43,54,116,.04)}
-.pw-step:hover{border-color:var(--blue);box-shadow:0 12px 26px -16px rgba(43,54,116,.45);transform:translateY(-2px)}
-.pw-step .num{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--faint)}
-.pw-step .nm{font-size:.85rem;font-weight:700;color:var(--ink);margin-top:.2rem;line-height:1.3}
-.pw-step.active{background:var(--blue);border-color:var(--blue);box-shadow:0 14px 28px -14px rgba(31,67,151,.6)}
-.pw-step.active .nm,.pw-step.active .num{color:#fff}
-.pw-step.active .num{color:rgba(255,255,255,.7)}
-.pw-arrow{align-self:center;color:var(--line-2);display:grid;place-items:center}
-.pw-arrow i,.pw-arrow svg.lucide{width:1rem;height:1rem}
 .pw-flash{outline:2px solid var(--blue);outline-offset:5px;border-radius:0}
 @media(max-width:640px){.pw-arrow{display:none}}
 
@@ -1557,12 +1545,6 @@ function accountShell(active,crumbItems,inner){
 }
 
 /* ---- reusable blocks ---- */
-function typesPathway(activeId,target){
-  return `<div class="pathway">${TYPES.map((t,i)=>`
-    <div class="pw-step ${t.id===activeId?'active':''}" onclick="${target==='filter'?`goTypeFilter(${i})`:`go('#/type/${t.id}')`}">
-      <div class="num">${t.num}</div><div class="nm">${t.name.replace(' Commons','')}</div></div>
-    ${i<TYPES.length-1?`<div class="pw-arrow">${ic('chevron-right')}</div>`:''}`).join("")}</div>`;
-}
 function workflowFlow(){
   return `<div class="flow">${WORKFLOW.map((w,i)=>`
     <div class="node ${i===WORKFLOW.length-1?'strong':''}" onclick="go('#/help')"><b>${w.t}</b><span>${w.r}</span></div>
@@ -1992,55 +1974,6 @@ screens.types=()=>{
   </div></section>
   </div>
 `);};
-
-/* ---------- TYPE DETAIL ---------- */
-screens.type=(p)=>{
-  const t=typeById(p.id)||TYPES[0], m=TYPE_META[t.id];
-  const maps=t.maps?t.maps:(t.mapNames?[{label:t.name+" — local names by state",names:t.mapNames}]:null);
-  const totalNames=maps?maps.reduce((a,x)=>a+x.names.length,0):0;
-  const heroRight=t.maps
-    ? `<div class="stack">${t.sub.map((s,i)=>`<div class="panel" style="padding:1.15rem">
-        <div class="row" style="align-items:center;gap:.75rem">${tile(i?'trees':'scroll-text',m.c)}<h3 style="font-size:1rem">${s[0]}</h3></div>
-        <p class="muted mt8" style="font-size:.87rem">${s[1]}</p></div>`).join("")}</div>`
-    : imageFrame(`${t.id}-commons-map.png`,`${t.name} — local names map`,`Add ${t.name} local-names map`,`India map of local names · drop file as ${t.id}-commons-map.png`,'min-height:19rem');
-  const mapSections=maps?maps.map(mp=>`
-    <section class="section"><div class="mx">
-      <div class="sechead">
-        <div><span class="eyebrow"><span class="pd"></span>Local names across India</span>
-          <h2 style="margin-top:.9rem;font-size:1.45rem">${mp.label}</h2>
-          <p class="sub">The names communities use across different states (ref: Our Commons · promiseofcommons.in/discover) — a static illustrated map.</p></div>
-        <span class="tag blue">${ic('tags')} ${mp.names.length} local names</span>
-      </div>
-      <div class="ph flat" style="min-height:21rem;cursor:pointer" onclick="toast('Marker → local-name popup card (placeholder)')">
-        ${tile('map-pinned','blue')}<b>Static illustrated India map — ${mp.label}</b><span>pins mark the states where each name is used</span></div>
-      <div class="grid g3 mt24">${mp.names.map(n=>`<div class="namecard" style="--tc:${m.color}"><h5>${n[0]}</h5><p>${n[1]}</p></div>`).join("")}</div>
-    </div></section>`).join(""):"";
-  return shell("#/types",[{label:"Home",href:"#/home"},{label:"Types of Commons",href:"#/types"},{label:t.name}],`
-    <div class="mx" style="padding-top:1.25rem">${typesPathway(t.id)}</div>
-    <div class="hero" style="margin-top:1.5rem"><div class="in">
-      <div class="hero-split">
-        <div>
-          <span class="eyebrow"><span class="pd"></span>Type of Common ${t.num}</span>
-          <h1 style="font-size:2.1rem;display:flex;align-items:center;gap:.85rem">${tile(m.icon,m.c,'lg')} ${t.name}</h1>
-          <p class="lead">${t.desc}</p>
-          <div class="inforow mt16" style="max-width:34rem;border-left:3px solid ${m.color}">
-            <h5>Local names</h5><p>${t.local}</p></div>
-          <div class="row mt16">
-            <span class="tag">${ic('tags')} ${totalNames} documented names</span>
-            <span class="tag">${ic('map')} pan-India</span>
-          </div>
-        </div>
-        ${heroRight}
-      </div>
-    </div></div>
-    ${mapSections}
-    <section class="section"><div class="mx"><div class="callout" style="border-left-color:${m.color}">
-      <div class="row" style="align-items:center;gap:1rem;flex:1;min-width:16rem">${tile('map-pin-plus',m.c)}
-        <div class="tx"><strong>Know another local name for ${t.name.toLowerCase()}?</strong>
-        <span>Add it with GPS and district — a reviewer checks it before it appears on the map.</span></div></div>
-      <button class="btn btn-primary arrow" onclick="go('#/contribute')">Contribute a local name ${ic('arrow-right')}</button>
-    </div></div></section>`);
-};
 
 /* ---------- SIGNIFICANCE ---------- */
 screens.significance=()=>shell("#/significance",null,`
@@ -2683,8 +2616,8 @@ function roleGate(title,msg){
 
 /* ---------- SEARCH OVERLAY ---------- */
 function searchOverlayHTML(){
-  const sugg=[["Sacred groves","#/type/cultural"],["Cascading tanks","#/type/water"],["Grazing commons","#/type/pasture"],
-              ["Local names","#/types"],["Commoning stories","#/commoning"],["Coastal","#/type/coastal"]];
+  const sugg=[["Sacred groves","#/types"],["Cascading tanks","#/types"],["Grazing commons","#/types"],
+              ["Local names","#/types"],["Commoning stories","#/commoning"],["Coastal","#/types"]];
   return `<div class="between" style="margin-bottom:.35rem">
       <h3 style="font-size:1.25rem">What are you looking for?</h3>
       <button class="iconbtn" onclick="closeSearch()" aria-label="Close">${ic('x')}</button></div>
@@ -2740,7 +2673,6 @@ function render(){
   if(name==="contribute" && currentRole!=null && !roleCan('contribute')){ html=roleGate('Contribute','Your current role can\'t submit local names or rules.'); }
   else if(name==="admin" && currentRole==null){ html=gateScreen('Moderation','Sign in to open the moderation portal.'); }
   else if(name==="admin" && !roleCan('moderate')){ html=roleGate('Moderation','Your current role can\'t open the moderation portal.'); }
-  else if(name==="type"){params.id=parts[1];html=screens.type(params);}
   else if(name==="story"){params.id=parts[1];html=screens.story(params);}
   else if(name==="submission"){params.src=parts[1];params.idx=parts[2];html=screens.submission(params);}
   else if(screens[name]){html=screens[name](params);}
@@ -2991,7 +2923,6 @@ function typeFilter(i,el,scroll,sub,subEl){
   icons();
   if(scroll)pwGo('types-detail');
 }
-function openTypePage(){go('#/type/'+TYPES[curTypeIdx].id)}
 function goTypeFilter(i){
   curTypeIdx=i;
   if(location.hash==='#/types'){typeFilter(i,null,true);}
