@@ -616,6 +616,34 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .sigmap-top span{display:inline-flex;align-items:center;gap:.45rem}
 .sigmap-top i,.sigmap-top svg.lucide{width:1rem;height:1rem;color:var(--faint)}
 .sigmap-canvas{position:relative;min-height:20rem}
+
+/* ---- map side drawer (state → local names) ---- */
+.mdrawer{position:absolute;top:0;right:0;bottom:0;width:23rem;max-width:88%;background:#fff;
+  border-left:1px solid var(--line);box-shadow:-22px 0 48px -28px rgba(43,54,116,.6);z-index:20;
+  display:flex;flex-direction:column;transform:translateX(101%);transition:transform .24s ease;pointer-events:none}
+.mdrawer.open{transform:none;pointer-events:auto}
+.md-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;
+  padding:1.1rem 1.15rem;border-bottom:1px solid var(--line);flex:none}
+.md-kicker{display:block;font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.md-head b{font-size:1.15rem;font-weight:800;color:var(--ink);line-height:1.25}
+.md-body{flex:1;overflow-y:auto;padding:1.15rem;scrollbar-width:thin}
+.sd-lens{display:flex;gap:.6rem;align-items:flex-start;padding:.8rem;background:var(--bg-soft);
+  border:1px solid var(--line);margin-bottom:1.1rem}
+.sd-lens i,.sd-lens svg.lucide{width:1.05rem;height:1.05rem;color:var(--blue);flex:none;margin-top:.1rem}
+.sd-lens b{display:block;font-size:.88rem;font-weight:800;color:var(--ink)}
+.sd-lens span{display:block;font-size:.8rem;color:var(--muted);margin-top:.15rem;line-height:1.5}
+.sd-group{margin-bottom:1.15rem}
+.sd-gh{display:flex;align-items:center;gap:.45rem;font-size:.72rem;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:.5rem}
+.sd-gh i{width:.6rem;height:.6rem;border-radius:50%;flex:none;display:block}
+.sd-row{padding:.6rem .7rem;border:1px solid var(--line);border-bottom:0;background:#fff}
+.sd-group .sd-row:last-child{border-bottom:1px solid var(--line)}
+.sd-row b{display:block;font-size:.9rem;font-weight:700;color:var(--ink)}
+.sd-row span{font-size:.78rem;color:var(--muted-2)}
+.sd-empty{text-align:center;padding:1.5rem .5rem}
+.sd-empty b{display:block;font-size:.92rem;color:var(--ink);margin:.85rem 0 .35rem}
+.sd-empty p{font-size:.82rem;color:var(--muted);line-height:1.6}
+@media(max-width:700px){.mdrawer{width:100%;max-width:100%}}
 .sigzoom{position:absolute;top:.8rem;left:.8rem;display:flex;flex-direction:column;gap:.35rem;z-index:3}
 .sigzoom button{width:2rem;height:2rem;border:1px solid var(--line-2);background:#fff;border-radius:.45rem;
   display:grid;place-items:center;color:var(--muted)}
@@ -2011,6 +2039,13 @@ screens.significance=()=>shell("#/significance",null,`
           <div id="sigMap" class="leafmap"></div>
           <div id="sig-empty" class="ph" style="display:none">${tile('map-pinned','blue')}
             <b>No states match these filters</b><span>clear the filters to see them all</span></div>
+          <aside class="mdrawer" id="sigDrawer" aria-hidden="true" aria-label="Local names for the selected state">
+            <div class="md-head">
+              <div><span class="md-kicker">Local names</span><b id="sd-state">—</b></div>
+              <button class="iconbtn" onclick="closeSigDrawer()" aria-label="Close">${ic('x')}</button>
+            </div>
+            <div class="md-body" id="sd-body"></div>
+          </aside>
         </div>
       </div>
     </div>
@@ -2864,6 +2899,7 @@ function initSigMap(){
 }
 function drawSigMarkers(i){
   if(!sigMap||!sigMarkers) return;
+  closeSigDrawer();
   sigMarkers.clearLayers();
   const colour=getComputedStyle(document.documentElement).getPropertyValue(SIG_COLOUR[i]).trim();
   const rows=sigStatesFor(i);
@@ -2872,9 +2908,8 @@ function drawSigMarkers(i){
     const icon=L.divIcon({className:'',iconSize:[r.featured?26:18,r.featured?26:18],
       iconAnchor:[r.featured?13:9,r.featured?13:9],
       html:`<span class="sgpin${r.featured?' on':''}" style="background:${r.featured?colour:'#fff'};border-color:${colour}"></span>`});
-    L.marker(ll,{icon}).addTo(sigMarkers)
-      .bindPopup(`<b>${r.state}</b><br>${SIG[i].key}${r.note?' — '+r.note:''}<br>
-        <span style="color:#6b7280">State-wise content from the Commons Matrix.</span>`);
+    L.marker(ll,{icon,title:r.state}).addTo(sigMarkers)
+      .on('click',()=>openSigDrawer(r.state,i));
   });
   const sc=document.getElementById('sig-stat-states'); if(sc) sc.textContent=rows.length;
   const empty=document.getElementById('sig-empty'); if(empty) empty.style.display=rows.length?'none':'flex';
@@ -2895,6 +2930,37 @@ function clearSigFilters(){
   drawSigMarkers(curSigIdx||0);
   if(sigMap) sigMap.setView([22.6,80.0],4.4);
 }
+
+/* ---- state drawer: every local name recorded for the state that was clicked ---- */
+function openSigDrawer(state,i){
+  const d=document.getElementById('sigDrawer'), body=document.getElementById('sd-body'), h=document.getElementById('sd-state');
+  if(!d||!body) return;
+  h.textContent=state;
+  const names=LOCAL_NAMES.filter(n=>n[1]===state);
+  const note=(sigStatesFor(i).find(r=>r.state===state)||{}).note||'';
+  const byType={};
+  names.forEach(n=>{ (byType[n[2]]=byType[n[2]]||[]).push(n[0]); });
+  const lens=`<div class="sd-lens">${ic(SIG_CATS[i].icon)}<div><b>${SIG[i].key}</b>${note?`<span>${note}</span>`:''}</div></div>`;
+  const list=Object.keys(byType).length
+    ? Object.keys(byType).map(t=>`
+        <div class="sd-group">
+          <div class="sd-gh"><i style="background:var(--t-${t.toLowerCase()})"></i>${t} Commons</div>
+          ${byType[t].map(nm=>`<div class="sd-row"><b>${nm}</b><span>${state}</span></div>`).join("")}
+        </div>`).join("")
+    : `<div class="sd-empty">${tile('tag','blue')}
+         <b>No local names recorded yet for ${state}</b>
+         <p>Published contributions appear here. If you know what a common is called here, it belongs on this list.</p></div>`;
+  body.innerHTML=lens+list+
+    `<button class="btn btn-primary arrow block" style="margin-top:1.1rem" onclick="go('#/contribute')">
+       ${ic('map-pin-plus')} Add a local name ${ic('arrow-right')}</button>`;
+  d.classList.add('open'); d.setAttribute('aria-hidden','false');
+  icons();
+}
+function closeSigDrawer(){
+  const d=document.getElementById('sigDrawer');
+  if(d){ d.classList.remove('open'); d.setAttribute('aria-hidden','true'); }
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSigDrawer(); });
 
 /* ---------- MAP FILTERS ---------- */
 let curSigIdx=0;
