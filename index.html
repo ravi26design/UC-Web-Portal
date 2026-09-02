@@ -1089,6 +1089,37 @@ main{min-height:60vh;animation:fade .3s ease}
 .sh-meta .sr-warn i,.sh-meta .sr-warn svg.lucide{color:var(--amber-d)}
 .subhead .tag{flex:none;margin-top:.35rem}
 
+/* ---- activity & history (tabbed) ---- */
+.sd-hist{background:#fff;border:1px solid var(--line)}
+.sd-hist-h{display:flex;align-items:center;gap:.5rem;padding:1.15rem 1.5rem;border-bottom:1px solid var(--line);
+  font-size:1.05rem;font-weight:800;color:var(--ink)}
+.sd-hist-h i,.sd-hist-h svg.lucide{width:1rem;height:1rem;color:var(--muted)}
+.sd-hist-b{padding:1.5rem 1.6rem 1.75rem}
+.seg-tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem}
+.seg-tab{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .85rem;
+  font:inherit;font-size:.82rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.15s;
+  display:inline-flex;align-items:center;gap:.45rem}
+.seg-tab:hover{border-color:var(--green);color:var(--green-d)}
+.seg-tab.on{background:var(--green);color:#fff;border-color:var(--green)}
+.seg-tab.on:hover{background:var(--green-d);border-color:var(--green-d)}
+.cm-box{display:flex;gap:.9rem;background:var(--bg-soft);border:1px solid var(--line-2);padding:1.25rem}
+.cm-grow{flex:1;min-width:0}
+.cm-box textarea{width:100%;min-height:5.5rem;resize:vertical;padding:.75rem .95rem;
+  border:1px solid var(--line-2);border-radius:0;background:#fff;color:var(--ink);
+  font:inherit;font-size:.92rem;line-height:1.6;outline:none;transition:.15s}
+.cm-box textarea::placeholder{color:var(--faint)}
+.cm-box textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(78,124,89,.12)}
+.pw-av.sm{width:1.9rem;height:1.9rem;font-size:.62rem}
+.cm-list{margin-top:1.25rem}
+.cm-item{display:flex;gap:.9rem;padding:1.15rem .25rem;border-bottom:1px solid var(--line)}
+.cm-item:last-child{border-bottom:0;padding-bottom:.25rem}
+.cm-h{font-size:.83rem;color:var(--muted);margin-bottom:.3rem}
+.cm-h b{color:var(--ink);font-weight:800}
+.cm-t{font-size:.9rem;line-height:1.65;color:var(--ink-2)}
+.hist-empty{text-align:center;padding:1.75rem .5rem 1.25rem}
+.hist-empty b{display:block;font-size:.95rem;color:var(--ink);margin:.85rem 0 .35rem}
+.hist-empty p{font-size:.85rem;color:var(--muted);line-height:1.65;max-width:30rem;margin:0 auto}
+
 /* ---- count tabs ---- */
 .tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;margin:1.1rem 0 1.25rem}
 .tab-c{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .85rem;font-size:.82rem;font-weight:600;
@@ -2489,6 +2520,8 @@ screens.submission=(p)=>{
   const back=fromQueue?'#/approvals':'#/contributions';
   const stage=status==='Pending'?0:status==='Reviewed'?1:status==='Approved'?2:status==='Published'?3:0;
   const hasLoc=loc&&loc!=='—';
+  const tab=(p&&p.tab)||'comments';
+  const href='#/submission/'+p.src+'/'+p.idx;
   return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],`
   <section class="section" style="padding-top:2rem"><div class="mx">
     <button class="btn btn-ghost sm subback" onclick="go('${back}')">${ic('arrow-left')} ${fromQueue?'Approvals':'My Contributions'}</button>
@@ -2504,36 +2537,43 @@ screens.submission=(p)=>{
       ${statusPill(status)}
     </div>
     <div class="grid" style="grid-template-columns:1.6fr 1fr;gap:1.75rem;align-items:start">
-      <div class="stack">
-        <div class="panel">
-          <div class="kicker" style="margin-bottom:1.1rem">Approval workflow</div>
-          ${wfTimeline(stage,who)}
-        </div>
-        <div class="panel">
-          <div class="kicker" style="margin-bottom:.75rem">Activity log</div>
-          <div class="log-row"><span class="log-dot"></span><div>
-            <div class="lt"><b>${who}</b> submitted this ${type.toLowerCase()}</div><div class="ld">2026-05-12 · 10:45 AM</div></div></div>
-          ${stage>=1?`<div class="log-row"><span class="log-dot"></span><div>
-            <div class="lt"><b>Moderator</b> reviewed and verified the details</div><div class="ld">2026-05-13 · 03:20 PM</div></div></div>`:''}
-          ${stage>=2?`<div class="log-row"><span class="log-dot"></span><div>
-            <div class="lt"><b>Admin</b> approved for publishing</div><div class="ld">2026-05-14 · 11:05 AM</div></div></div>`:''}
-          ${stage>=3?`<div class="log-row"><span class="log-dot"></span><div>
-            <div class="lt">Published — now live on the map &amp; pages</div><div class="ld">2026-05-14 · 04:30 PM</div></div></div>`:''}
-        </div>
-        <div class="panel">
-          <div class="kicker" style="margin-bottom:.9rem">Comments</div>
-          <div class="row" style="gap:.7rem;align-items:flex-start">
-            <span class="pw-av">MP</span>
-            <div style="flex:1">
-              <div style="font-size:.85rem"><b>Moderator</b> <span class="muted">· 13 May 2026</span></div>
-              <p class="muted" style="font-size:.88rem;margin-top:.2rem">Please confirm the GPS location — it looks slightly off from the state boundary.</p></div>
+      <div class="sd-hist">
+        <div class="sd-hist-h">${ic('history')} Activity &amp; history</div>
+        <div class="sd-hist-b">
+          <div class="seg-tabs">
+            ${[['comments','Comments'],['workflow','Submission Workflow'],['versions','Version History'],['activity','Activity Log']]
+              .map(t=>`<button class="seg-tab ${tab===t[0]?'on':''}" onclick="go('${href}?tab='+'${t[0]}')">${t[1]}</button>`).join("")}
           </div>
-          <div class="row" style="gap:.7rem;align-items:flex-start;margin-top:1.1rem">
-            <span class="pw-av">${who==='You'?'YO':who}</span>
-            <div style="flex:1">
-              <textarea placeholder="Add a comment…" style="width:100%;padding:.65rem .9rem;border:1px solid var(--line-2);border-radius:.6rem;font-family:inherit;font-size:.9rem;min-height:4.5rem;outline:none"></textarea>
-              <button class="btn btn-primary sm mt8" onclick="toast('Comment posted (placeholder)')">${ic('send')} Post comment</button></div>
-          </div>
+          ${tab==='workflow'?wfTimeline(stage,who)
+           :tab==='versions'?`<div class="hist-empty">${tile('history','green')}
+              <b>No revisions yet</b>
+              <p>This submission hasn't been edited since it was created. Any change a reviewer or contributor makes will be listed here.</p></div>`
+           :tab==='activity'?`
+            <div class="log-row"><span class="log-dot"></span><div>
+              <div class="lt"><b>${who}</b> submitted this ${type.toLowerCase()}</div><div class="ld">2026-05-12 · 10:45 AM</div></div></div>
+            ${stage>=1?`<div class="log-row"><span class="log-dot"></span><div>
+              <div class="lt"><b>Moderator</b> reviewed and verified the details</div><div class="ld">2026-05-13 · 03:20 PM</div></div></div>`:''}
+            ${stage>=2?`<div class="log-row"><span class="log-dot"></span><div>
+              <div class="lt"><b>Admin</b> approved for publishing</div><div class="ld">2026-05-14 · 11:05 AM</div></div></div>`:''}
+            ${stage>=3?`<div class="log-row"><span class="log-dot"></span><div>
+              <div class="lt">Published - now live on the map &amp; pages</div><div class="ld">2026-05-14 · 04:30 PM</div></div></div>`:''}`
+           :`
+            <div class="cm-box">
+              <span class="pw-av sm">${who==='You'?'YO':who}</span>
+              <div class="cm-grow">
+                <textarea id="sub-comment" placeholder="Add a comment…"></textarea>
+                <div class="row" style="justify-content:flex-end;margin-top:.75rem">
+                  <button class="btn btn-primary sm" onclick="toast('Comment posted (placeholder)')">${ic('send')} Post</button>
+                </div>
+              </div>
+            </div>
+            <div class="cm-list">
+              <div class="cm-item">
+                <span class="pw-av sm">MP</span>
+                <div><p class="cm-h"><b>Moderator</b> &middot; 13 May 2026</p>
+                  <p class="cm-t">Please confirm the GPS location - it looks slightly off from the state boundary.</p></div>
+              </div>
+            </div>`}
         </div>
       </div>
       <div class="stack">
