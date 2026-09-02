@@ -2316,12 +2316,13 @@ screens.story=(p)=>{const s=storyById(p.id)||STORIES[0];
 
 /* ---------- CONTRIBUTE ---------- */
 /* the contribute form, opened as a modal from either page */
-function contribFormModal(kind,base){
+function contribFormModal(kind,base,pre){
+  const editing=!!pre;
   return `
     <div class="modal-back" onclick="if(event.target===this)go('${base}')">
       <div class="modal-card wide">
         <div class="fm-head">
-          <div><div class="kicker">Contribute</div><b>Add your entry</b></div>
+          <div><div class="kicker">${editing?'Edit':'Contribute'}</div><b>${editing?'Edit your entry':'Add your entry'}</b></div>
           <button class="modal-x" onclick="go('${base}')" aria-label="Close">${ic('x')}</button>
         </div>
         <div class="fm-body">
@@ -2333,7 +2334,7 @@ function contribFormModal(kind,base){
           <button class="btn ${kind==='rule'?'btn-primary':'btn-outline'} block" onclick="go('${base}?form=1&kind=rule')">${ic(kind==='rule'?'circle-check':'circle')} Local Rule</button>
         </div>
         <div class="field"><label>Name of the common <span class="req">*</span></label>
-          <input id="cf-name" placeholder="e.g. Devrai near the temple"></div>
+          <input id="cf-name" placeholder="e.g. Devrai near the temple" value="${editing?pre.name.replace(/"/g,'&quot;'):''}"></div>
         <div class="grid g2" style="gap:1rem">
           <div class="field"><label>Type of common <span class="req">*</span></label>
             <div class="selw"><select id="cf-type">${TYPES.map(t=>`<option>${t.name}</option>`).join("")}</select>${ic('chevron-down','cv')}</div></div>
@@ -2369,7 +2370,7 @@ function contribFormModal(kind,base){
           </div></div>
         <div class="between" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line)">
           <button class="btn btn-ghost" onclick="go('${base}')">Cancel</button>
-          <button class="btn btn-primary arrow" onclick="submitContribution('${kind}')">Submit for review ${ic('arrow-right')}</button>
+          <button class="btn btn-primary arrow" onclick="${editing?`saveContribution('${kind}',${pre.idx})`:`submitContribution('${kind}')`}">${editing?'Save changes':'Submit for review'} ${ic('arrow-right')}</button>
         </div>
       </div>
           </div>
@@ -2524,9 +2525,13 @@ screens.submission=(p)=>{
   const back=fromQueue?'#/approvals':'#/contributions';
   const stage=status==='Pending'?0:status==='Reviewed'?1:status==='Approved'?2:status==='Published'?3:0;
   const hasLoc=loc&&loc!=='—';
+  const canEdit=!fromQueue&&roleCan('contribute')&&status!=='Published';
   const tab=(p&&p.tab)||'comments';
   const href='#/submission/'+p.src+'/'+p.idx;
-  return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],`
+  const editModal=(p&&p.form==='1'&&canEdit)
+    ? contribFormModal(/rule/i.test(type)?'rule':'name', href, {name:name==='Untitled common'?'':name, idx:+p.idx})
+    : '';
+  return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],editModal+`
   <section class="section" style="padding-top:2rem"><div class="mx">
     <div class="subhead">
       <div class="sh-tx">
@@ -2538,6 +2543,10 @@ screens.submission=(p)=>{
         </div>
       </div>
       <div class="sh-act">
+        ${canEdit?`<div class="row">
+          <button class="btn btn-outline sm" onclick="go('${href}?form=1')">${ic('pencil')} Edit</button>
+          <button class="btn btn-outline sm danger" onclick="deleteContribution(${p.idx})">${ic('trash-2')} Delete</button>
+        </div>`:''}
         ${canApprove?`<div class="row">
           <button class="btn btn-green sm" onclick="toast('Approved (placeholder)')">${ic('check')} Approve</button>
           <button class="btn btn-outline sm" onclick="toast('Changes requested (placeholder)')">${ic('message-square')} Request changes</button>
@@ -2974,6 +2983,30 @@ function submitContribution(kind){
   USER_SUBS.unshift([type,name,loc,'Pending']);
   saveSubs();
   go('#/contribute?submitted='+kind);
+}
+/* editing an entry already in the list — user submissions persist, sample rows change for the session */
+function saveContribution(kind,idx){
+  const g=id=>{const e=document.getElementById(id);return e&&e.value?e.value.trim():''};
+  const parts=ADM_LEVELS.map(lv=>{const e=document.getElementById(lv.id);return e&&e.value?e.value:''}).filter(Boolean);
+  const row=myContribs()[idx];
+  if(!row){ toast('That submission is no longer here'); return; }
+  const type=kind==='rule'?'Local Rule':'Local Name';
+  const name=g('cf-name')||row[1];
+  const loc=parts.length?parts.join(' · '):row[2];
+  const next=[type,name,loc,row[3]];
+  if(idx<USER_SUBS.length){ USER_SUBS[idx]=next; saveSubs(); }
+  else { MY_CONTRIB[idx-USER_SUBS.length]=next; toast('Sample entry — the change lasts for this session'); }
+  go('#/submission/mine/'+idx);
+  toast('Changes saved');
+}
+function deleteContribution(idx){
+  const row=myContribs()[idx];
+  if(!row) return;
+  if(!confirm('Delete "'+(row[1]||'this submission')+'"? This cannot be undone.')) return;
+  if(idx<USER_SUBS.length){ USER_SUBS.splice(idx,1); saveSubs(); }
+  else { MY_CONTRIB.splice(idx-USER_SUBS.length,1); }
+  go('#/contributions');
+  toast('Submission deleted');
 }
 function useMyLocation(){
   const el=document.getElementById('gps-val');
