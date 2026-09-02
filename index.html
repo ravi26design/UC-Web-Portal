@@ -1279,6 +1279,9 @@ main{min-height:60vh;animation:fade .3s ease}
 .modal-ic{width:4rem;height:4rem;border-radius:50%;background:var(--green-soft);border:1px solid var(--green-line);
   color:var(--green-d);display:grid;place-items:center;margin:0 auto 1.1rem}
 .modal-ic i,.modal-ic svg.lucide{width:1.9rem;height:1.9rem}
+.modal-ic.danger{background:var(--red-soft);border-color:#f6cdd7;color:var(--red)}
+.btn-danger{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-danger:hover{background:#b81840;border-color:#b81840;color:#fff;transform:translateY(-1px)}
 
 /* ---- wide form modal (Contribute) ---- */
 .modal-card.wide{width:min(46rem,100%);max-height:90vh;padding:0;text-align:left;display:flex;flex-direction:column}
@@ -2531,7 +2534,21 @@ screens.submission=(p)=>{
   const editModal=(p&&p.form==='1'&&canEdit)
     ? contribFormModal(/rule/i.test(type)?'rule':'name', href, {name:name==='Untitled common'?'':name, idx:+p.idx})
     : '';
-  return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],editModal+`
+  const delModal=(p&&p.confirm==='delete'&&canEdit)?`
+    <div class="modal-back" onclick="if(event.target===this)go('${href}')">
+      <div class="modal-card">
+        <button class="modal-x" onclick="go('${href}')" aria-label="Close">${ic('x')}</button>
+        <div class="modal-ic danger">${ic('trash-2')}</div>
+        <h2 style="font-size:1.3rem;margin-bottom:.6rem">Delete this submission?</h2>
+        <p class="muted" style="line-height:1.7;margin-bottom:1.75rem">
+          <b style="color:var(--ink)">${name}</b> will be removed from your contributions. This can't be undone.</p>
+        <div class="row" style="justify-content:center">
+          <button class="btn btn-outline" onclick="go('${href}')">Keep it</button>
+          <button class="btn btn-danger" onclick="deleteContribution(${p.idx})">${ic('trash-2')} Delete submission</button>
+        </div>
+      </div>
+    </div>`:'';
+  return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],editModal+delModal+`
   <section class="section" style="padding-top:2rem"><div class="mx">
     <div class="subhead">
       <div class="sh-tx">
@@ -2545,7 +2562,7 @@ screens.submission=(p)=>{
       <div class="sh-act">
         ${canEdit?`<div class="row">
           <button class="btn btn-outline sm" onclick="go('${href}?form=1')">${ic('pencil')} Edit</button>
-          <button class="btn btn-outline sm danger" onclick="deleteContribution(${p.idx})">${ic('trash-2')} Delete</button>
+          <button class="btn btn-outline sm danger" onclick="go('${href}?confirm=delete')">${ic('trash-2')} Delete</button>
         </div>`:''}
         ${canApprove?`<div class="row">
           <button class="btn btn-green sm" onclick="toast('Approved (placeholder)')">${ic('check')} Approve</button>
@@ -3002,7 +3019,6 @@ function saveContribution(kind,idx){
 function deleteContribution(idx){
   const row=myContribs()[idx];
   if(!row) return;
-  if(!confirm('Delete "'+(row[1]||'this submission')+'"? This cannot be undone.')) return;
   if(idx<USER_SUBS.length){ USER_SUBS.splice(idx,1); saveSubs(); }
   else { MY_CONTRIB.splice(idx-USER_SUBS.length,1); }
   go('#/contributions');
