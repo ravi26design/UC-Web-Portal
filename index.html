@@ -78,9 +78,48 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .nav-ic{border:0;background:none;padding:.25rem;color:var(--ink);display:grid;place-items:center;transition:color .15s}
 .nav-ic:hover{color:var(--green-d)}
 .nav-ic i,.nav-ic svg.lucide{width:1.25rem;height:1.25rem;stroke-width:2.4}
-.nav-mark{width:1.85rem;height:1.85rem;display:grid;place-items:center;flex:none;
+.nav-mark{width:1.45rem;height:1.45rem;display:grid;place-items:center;flex:none;
   color:var(--ink);transition:color .15s}
 .nav-mark svg{width:100%;height:100%;display:block}
+.navsearch{display:flex;align-items:center;gap:.5rem}
+.ns-field{display:none;position:relative;align-items:center}
+.ns-field input{width:100%;min-width:0;padding:.5rem 2.4rem .5rem .85rem;border:1px solid var(--line-2);
+  border-radius:0;background:#fff;font:inherit;font-size:.9rem;color:var(--ink);outline:none;transition:.15s}
+.ns-field input::placeholder{color:var(--faint)}
+.ns-field input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(78,124,89,.12)}
+.ns-go{position:absolute;right:.5rem;border:0;background:none;padding:0;display:grid;place-items:center;
+  color:var(--muted);cursor:pointer;transition:color .15s}
+.ns-go:hover{color:var(--green-d)}
+.ns-go i,.ns-go svg.lucide{width:1.1rem;height:1.1rem;stroke-width:2.4}
+.ns-x{display:none;border:0;background:none;padding:.25rem;color:var(--muted);cursor:pointer;transition:color .15s}
+.ns-x:hover{color:var(--ink)}
+.ns-x i,.ns-x svg.lucide{width:1.15rem;height:1.15rem;stroke-width:2.4}
+.navsearch.open .nav-ic{display:none}
+.navsearch.open .ns-field{display:flex;flex:1;max-width:34rem}
+.navsearch.open .ns-x{display:grid;place-items:center}
+.navsearch.open{flex:1;justify-content:flex-end}
+/* while searching, the links and the other nav marks step aside */
+.bar:has(.navsearch.open) .links{display:none}
+.bar:has(.navsearch.open) .appsw,
+.bar:has(.navsearch.open) .profilew,
+.bar:has(.navsearch.open) .navright>.profilew-btn{display:none}
+.bar:has(.navsearch.open) .navright{flex:1;min-width:0}
+/* suggestions hang under the field */
+.ns-sug{position:absolute;top:calc(100% + .35rem);left:0;right:0;background:#fff;
+  border:1px solid var(--line-2);box-shadow:var(--shadow-float);z-index:80;display:none;
+  max-height:22rem;overflow-y:auto;padding:.3rem}
+.ns-sug.open{display:block}
+.ns-hit{display:flex;align-items:center;gap:.7rem;width:100%;border:0;background:none;
+  padding:.55rem .6rem;font:inherit;text-align:left;cursor:pointer;transition:background .12s}
+.ns-hit:hover{background:var(--bg-soft)}
+.ns-hit .ns-dot{width:.6rem;height:.6rem;border-radius:50%;flex:none}
+.ns-hit-tx{min-width:0}
+.ns-hit-tx b{display:block;font-size:.88rem;font-weight:700;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ns-hit-tx span{display:block;font-size:.76rem;color:var(--muted-2)}
+.ns-sug mark{background:var(--amber-soft);color:var(--amber-d);padding:0 .1rem}
+.ns-none{padding:.85rem .6rem;font-size:.85rem;color:var(--muted)}
+@media(max-width:900px){.navsearch.open .ns-field{max-width:none}}
 .profilew-btn:hover .nav-mark{color:var(--green-d)}
 .langw{position:relative}
 .langbtn{display:inline-flex;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem;
@@ -1548,7 +1587,17 @@ function header(active){
       <span class="navdiv"></span>
       ${appsMenu()}
       ${authArea}
-      <button class="nav-ic" onclick="openSearch()" aria-label="Search" title="Search">${ic('search')}</button>
+      <div class="navsearch" id="navsearch">
+        <button class="nav-ic" onclick="openNavSearch()" aria-label="Search" title="Search">${ic('search')}</button>
+        <div class="ns-field">
+          <input id="ns-input" placeholder="Search..." autocomplete="off"
+            oninput="navSuggest(this.value)"
+            onkeydown="if(event.key==='Enter'){runSearch(this.value)} if(event.key==='Escape'){closeNavSearch()}">
+          <div class="ns-sug" id="ns-sug"></div>
+          <button class="ns-go" title="Search" onclick="runSearch(document.getElementById('ns-input').value)">${ic('search')}</button>
+        </div>
+        <button class="ns-x" title="Close" onclick="closeNavSearch()">${ic('x')}</button>
+      </div>
       <span class="navdiv"></span>
       <div class="langw" id="langw">
         <button class="langbtn" onclick="toggleLang(event)">EN ${ic('chevron-down')}</button>
@@ -2745,7 +2794,41 @@ function openSearch(){
   setTimeout(()=>{const i=document.getElementById("overlay-input");if(i)i.focus()},30);
 }
 function closeSearch(){document.getElementById("searchOverlay").classList.remove("open")}
-function runSearch(){closeSearch();go('#/types');toast('Search across the module (placeholder)')}
+function openNavSearch(){
+  const w=document.getElementById('navsearch'); if(!w) return;
+  w.classList.add('open');
+  const i=document.getElementById('ns-input'); if(i){ i.focus(); i.select(); }
+}
+function closeNavSearch(){
+  const w=document.getElementById('navsearch'); if(!w) return;
+  w.classList.remove('open');
+  const i=document.getElementById('ns-input'); if(i) i.value='';
+  const b=document.getElementById('ns-sug'); if(b){ b.classList.remove('open'); b.innerHTML=''; }
+}
+/* suggestions come from the local names we actually hold, plus the module's pages */
+function navSuggest(q){
+  const box=document.getElementById('ns-sug'); if(!box) return;
+  q=(q||'').trim();
+  if(q.length<2){ box.classList.remove('open'); box.innerHTML=''; return; }
+  const ql=q.toLowerCase();
+  const mark=t=>t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');
+  const hits=[];
+  LOCAL_NAMES.filter(n=>n[0].toLowerCase().includes(ql)||n[1].toLowerCase().includes(ql))
+    .slice(0,6).forEach(n=>hits.push({t:n[0],s:n[1]+' · '+n[2]+' Commons',c:'var(--t-'+n[2].toLowerCase()+')',h:'#/types'}));
+  NAV.filter(n=>n.label.toLowerCase().includes(ql))
+    .slice(0,3).forEach(n=>hits.push({t:n.label,s:'Page',c:'var(--green)',h:n.id}));
+  box.innerHTML = hits.length
+    ? hits.map(x=>`<button class="ns-hit" onclick="closeNavSearch();go('${x.h}')">
+        <span class="ns-dot" style="background:${x.c}"></span>
+        <span class="ns-hit-tx"><b>${mark(x.t)}</b><span>${x.s}</span></span></button>`).join("")
+    : `<div class="ns-none">Nothing recorded for "${q}" yet.</div>`;
+  box.classList.add('open');
+}
+function runSearch(q){
+  closeNavSearch(); closeSearch();
+  go('#/types');
+  toast(q&&q.trim()?'Searching for "'+q.trim()+'" (placeholder)':'Search across the module (placeholder)');
+}
 /* click-to-play: swap the thumbnail for the YouTube player (privacy-enhanced domain) */
 function playVideo(btn,id){
   const w=document.createElement('div');
