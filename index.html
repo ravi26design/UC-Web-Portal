@@ -262,7 +262,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .ic-tile i,.ic-tile svg.lucide{width:1.35rem;height:1.35rem;stroke-width:1.9}
 .ic-tile.lg{width:3.2rem;height:3.2rem;border-radius:.9rem}
 .ic-tile.blue{background:var(--blue-soft);color:var(--blue)}
-.ic-tile.amber{background:var(--amber-soft);color:var(--amber)}
+.ic-tile.green{background:var(--green-soft);color:var(--green-d)}
+.ic-tile.amber{background:var(--amber-soft);color:var(--amber-d)}
 .ic-tile.forest{background:var(--t-forest-s);color:var(--t-forest)}
 .ic-tile.pasture{background:var(--t-pasture-s);color:var(--t-pasture)}
 .ic-tile.water{background:var(--t-water-s);color:var(--t-water)}
@@ -594,8 +595,16 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 /* stat tiles */
 .stat{background:#fff;border:1px solid var(--line);border-radius:0;padding:1.15rem 1.25rem;box-shadow:var(--shadow-card)}
 .stat b{display:block;font-size:1.65rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
-.stat span{display:block;font-size:.78rem;font-weight:600;color:var(--muted-2);margin-top:.35rem}
+.stat div span{display:block;font-size:.78rem;font-weight:600;color:var(--muted-2);margin-top:.35rem}
+.stat .ic-tile{display:grid;place-items:center}
 .kpi{display:flex;align-items:center;gap:.9rem}
+/* contribution counters */
+.kpi.acc{gap:.85rem}
+.kpi.acc .ic-tile{width:2.4rem;height:2.4rem;border-radius:50%}
+.kpi.acc .ic-tile i,.kpi.acc .ic-tile svg.lucide{width:1.1rem;height:1.1rem;stroke-width:2}
+.kpi.acc b{font-size:1.8rem;color:var(--green-d)}
+.kpi.acc.warn b{color:var(--amber-d)}
+.kpi.acc div span{margin-top:.2rem;font-size:.77rem;letter-spacing:.01em}
 
 /* info rows */
 .inforow{background:#fff;border:1px solid var(--line);border-radius:.75rem;padding:.85rem 1rem}
@@ -1070,29 +1079,34 @@ main{min-height:60vh;animation:fade .3s ease}
 .tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:.85rem;margin:1.1rem 0 1.25rem}
 .tab-c{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.4rem .85rem;font-size:.82rem;font-weight:600;
   cursor:pointer;display:inline-flex;align-items:center;gap:.45rem;color:var(--ink);transition:.15s}
-.tab-c:hover{border-color:var(--blue);color:var(--blue)}
+.tab-c:hover{border-color:var(--green);color:var(--green-d)}
 .tab-c.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .tab-c .cnt{background:var(--chip);border-radius:999px;padding:0 .4rem;font-size:.7rem;font-weight:800;color:var(--muted)}
 .tab-c.active .cnt{background:rgba(255,255,255,.22);color:#fff}
 
 /* ---- submission rows ---- */
-.sub-row{display:flex;align-items:center;gap:.9rem;padding:.85rem .6rem;cursor:pointer;
+.sub-row{position:relative;display:flex;align-items:center;gap:.9rem;padding:1rem .6rem 1rem .85rem;cursor:pointer;
   border-top:1px solid var(--line);transition:background .15s}
 .sub-row:first-child{border-top:0}
 .sub-row:hover{background:var(--bg-soft)}
-.sr-ic{flex:none;display:grid;place-items:center;width:2.3rem;height:2.3rem;border-radius:50%}
+.sub-row::before{content:'';position:absolute;left:0;top:.35rem;bottom:.35rem;width:3px;
+  background:var(--green);opacity:0;transition:opacity .15s}
+.sub-row:hover::before{opacity:1}
+.sr-ic{flex:none;display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:50%}
 .sr-ic i,.sr-ic svg.lucide{width:1.05rem;height:1.05rem}
-.sr-ic.name{background:var(--blue-soft);color:var(--blue)}
-.sr-ic.rule{background:var(--t-cultural-s);color:var(--t-cultural)}
+.sr-ic.name{background:var(--green-soft);color:var(--green-d)}
+.sr-ic.rule{background:var(--amber-soft);color:var(--amber-d)}
 .sr-av{flex:none;width:2.3rem;height:2.3rem;font-size:.72rem}
 .sr-tx{flex:1;min-width:0}
-.sub-row b{display:block;font-size:.95rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-row b{display:block;font-size:.95rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-row .tag{flex:none;min-width:7.25rem;justify-content:center}
 .sub-row b.untitled{color:var(--muted-2);font-style:italic;font-weight:600}
 .sr-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted-2);margin-top:.15rem}
-.sr-warn{display:inline-flex;align-items:center;gap:.25rem;color:var(--amber);font-weight:600}
+.sr-warn{display:inline-flex;align-items:center;gap:.3rem;color:var(--amber-d);font-weight:700;
+  background:var(--amber-soft);border:1px solid var(--amber-line);padding:.05rem .4rem;font-size:.74rem}
 .sr-warn i,.sr-warn svg.lucide{width:.85rem;height:.85rem}
 .sr-go{flex:none;display:grid;place-items:center;width:1.9rem;height:1.9rem;color:var(--faint);transition:.15s}
-.sub-row:hover .sr-go{color:var(--blue);transform:translateX(2px)}
+.sub-row:hover .sr-go{color:var(--green-d);transform:translateX(2px)}
 .sr-go i,.sr-go svg.lucide{width:1.1rem;height:1.1rem}
 @media(max-width:560px){.sub-row{flex-wrap:wrap}.sr-tx{flex:1 1 60%}}
 
@@ -2252,25 +2266,22 @@ screens.story=(p)=>{const s=storyById(p.id)||STORIES[0];
 `);};
 
 /* ---------- CONTRIBUTE ---------- */
-screens.contribute=(p)=>{
-  const kind=(p&&p.kind==='rule')?'rule':'name';
-  const submitted=p&&p.submitted;
-  const isRule=submitted==='rule';
-  const formOpen=p&&p.form==='1';
-  const formModal=formOpen?`
-    <div class="modal-back" onclick="if(event.target===this)go('#/contribute')">
+/* the contribute form, opened as a modal from either page */
+function contribFormModal(kind,base){
+  return `
+    <div class="modal-back" onclick="if(event.target===this)go('${base}')">
       <div class="modal-card wide">
         <div class="fm-head">
           <div><div class="kicker">Contribute</div><b>Add your entry</b></div>
-          <button class="modal-x" onclick="go('#/contribute')" aria-label="Close">${ic('x')}</button>
+          <button class="modal-x" onclick="go('${base}')" aria-label="Close">${ic('x')}</button>
         </div>
         <div class="fm-body">
           <div class="fm-grid">
       <div class="panel" id="contrib-form" style="padding:1.75rem">
         <div class="kicker" style="margin-bottom:.6rem">What are you adding?</div>
         <div class="row" style="gap:.75rem;margin-bottom:1.5rem;flex-wrap:nowrap">
-          <button class="btn ${kind==='name'?'btn-primary':'btn-outline'} block" onclick="go('#/contribute?form=1&kind=name')">${ic(kind==='name'?'circle-check':'circle')} Local Name</button>
-          <button class="btn ${kind==='rule'?'btn-primary':'btn-outline'} block" onclick="go('#/contribute?form=1&kind=rule')">${ic(kind==='rule'?'circle-check':'circle')} Local Rule</button>
+          <button class="btn ${kind==='name'?'btn-primary':'btn-outline'} block" onclick="go('${base}?form=1&kind=name')">${ic(kind==='name'?'circle-check':'circle')} Local Name</button>
+          <button class="btn ${kind==='rule'?'btn-primary':'btn-outline'} block" onclick="go('${base}?form=1&kind=rule')">${ic(kind==='rule'?'circle-check':'circle')} Local Rule</button>
         </div>
         <div class="field"><label>Name of the common <span class="req">*</span></label>
           <input id="cf-name" placeholder="e.g. Devrai near the temple"></div>
@@ -2308,14 +2319,23 @@ screens.contribute=(p)=>{
             <span class="dz-note">${ic('lock')} Stored on the secure platform NAS</span>
           </div></div>
         <div class="between" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line)">
-          <button class="btn btn-ghost" onclick="go('#/contribute')">Cancel</button>
+          <button class="btn btn-ghost" onclick="go('${base}')">Cancel</button>
           <button class="btn btn-primary arrow" onclick="submitContribution('${kind}')">Submit for review ${ic('arrow-right')}</button>
         </div>
       </div>
           </div>
         </div>
       </div>
-    </div>`:'';
+    </div>`;
+}
+
+
+screens.contribute=(p)=>{
+  const kind=(p&&p.kind==='rule')?'rule':'name';
+  const submitted=p&&p.submitted;
+  const isRule=submitted==='rule';
+  const formOpen=p&&p.form==='1';
+  const formModal=formOpen?contribFormModal(kind,'#/contribute'):'';
   const modal=submitted?`
     <div class="modal-back" onclick="if(event.target===this)go('#/contribute')">
       <div class="modal-card">
@@ -2380,16 +2400,18 @@ screens.contributions=(p)=>{
   const n=st=>mine.filter(c=>c[3]===st).length;
   const tabs=[['All',mine.length],['Pending',n('Pending')],['Reviewed',n('Reviewed')],['Approved',n('Approved')],['Published',n('Published')]];
   const rows=mine.map((c,i)=>({c,i})).filter(o=>tab==='All'||o.c[3]===tab);
-  return accountShell('contributions',null,`
+  const kind=(p&&p.kind==='rule')?'rule':'name';
+  const formModal=(p&&p.form==='1')?contribFormModal(kind,'#/contributions'):'';
+  return accountShell('contributions',null,formModal+`
     <div class="between" style="margin-bottom:.5rem">
       <h1 style="font-size:1.65rem">My Contributions</h1>
-      <button class="btn btn-primary" onclick="go('#/contribute')">${ic('plus')} Contribute a Common</button></div>
+      <button class="btn btn-primary" onclick="go('#/contributions?form=1')">${ic('plus')} Contribute a Common</button></div>
     <p class="sub" style="margin-bottom:1.25rem">The local names and rules you have submitted, and where each sits in the review workflow. Tap a submission to see its full approval flow.</p>
     <div class="grid g4">
-      <div class="stat kpi">${tile('inbox','blue')}<div><b>${mine.length}</b><span>Total submissions</span></div></div>
-      <div class="stat kpi">${tile('clock','amber')}<div><b>${n('Pending')+n('Reviewed')}</b><span>In review</span></div></div>
-      <div class="stat kpi">${tile('check')}<div><b>${n('Approved')}</b><span>Approved</span></div></div>
-      <div class="stat kpi">${tile('globe','blue')}<div><b>${n('Published')}</b><span>Published</span></div></div>
+      <div class="stat kpi acc">${tile('file-text','green')}<div><b>${mine.length}</b><span>Total submissions</span></div></div>
+      <div class="stat kpi acc warn">${tile('clock','amber')}<div><b>${n('Pending')+n('Reviewed')}</b><span>In review</span></div></div>
+      <div class="stat kpi acc done">${tile('circle-check','green')}<div><b>${n('Approved')}</b><span>Approved</span></div></div>
+      <div class="stat kpi acc done">${tile('globe','green')}<div><b>${n('Published')}</b><span>Published</span></div></div>
     </div>
     <div class="tabs-c">${tabs.map(t=>`<span class="tab-c ${tab===t[0]?'active':''}" onclick="go('#/contributions${t[0]==='All'?'':'?tab='+t[0]}')">${t[0]} <span class="cnt">${t[1]}</span></span>`).join("")}</div>
     <div class="panel" style="padding:.5rem 1.1rem">
@@ -2412,10 +2434,10 @@ screens.approvals=(p)=>{
     <h1 style="font-size:1.65rem">Approvals</h1>
     <p class="sub" style="margin-bottom:1.25rem">Submissions awaiting your review. Tap one to open its approval flow and act on it.</p>
     <div class="grid g4">
-      <div class="stat kpi">${tile('clock','amber')}<div><b>${n('Pending')}</b><span>Pending</span></div></div>
-      <div class="stat kpi">${tile('eye','blue')}<div><b>${n('Reviewed')}</b><span>Reviewed</span></div></div>
-      <div class="stat kpi">${tile('check')}<div><b>${n('Approved')}</b><span>Approved</span></div></div>
-      <div class="stat kpi">${tile('inbox','blue')}<div><b>${APPROVAL_QUEUE.length}</b><span>Total in queue</span></div></div>
+      <div class="stat kpi acc warn">${tile('clock','amber')}<div><b>${n('Pending')}</b><span>Pending</span></div></div>
+      <div class="stat kpi acc">${tile('eye','green')}<div><b>${n('Reviewed')}</b><span>Reviewed</span></div></div>
+      <div class="stat kpi acc done">${tile('circle-check','green')}<div><b>${n('Approved')}</b><span>Approved</span></div></div>
+      <div class="stat kpi acc">${tile('file-text','green')}<div><b>${APPROVAL_QUEUE.length}</b><span>Total in queue</span></div></div>
     </div>
     <div class="tabs-c">${tabs.map(t=>`<span class="tab-c ${tab===t[0]?'active':''}" onclick="go('#/approvals${t[0]==='All'?'':'?tab='+t[0]}')">${t[0]} <span class="cnt">${t[1]}</span></span>`).join("")}</div>
     <div class="panel" style="padding:.5rem 1.1rem">
