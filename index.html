@@ -285,6 +285,7 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
 .pagehead h1{font-size:1.9rem;margin:.9rem 0 .6rem}
 .pagehead p{color:var(--muted);max-width:48rem}
+.pagehead.noline{border-bottom:0}
 @media(max-width:560px){.pagehead .in{padding:1.5rem 1.15rem 2rem}}
 
 /* ---------- cards ---------- */
@@ -2264,7 +2265,7 @@ screens.contribute=(p)=>{
       </div>
     </div>`:'';
   return shell("#/contribute",null,formModal+modal+`
-  <div class="pagehead"><div class="in">
+  <div class="pagehead noline"><div class="in">
     <div style="max-width:52rem">
       <h1>Add what your community <em>knows</em></h1>
       <p>Every entry on this map was added by someone who knows the place. What your village calls a grove, a tank or a grazing ground - and the rules that protect it - is recorded almost nowhere else. Share it, and it becomes part of a public record of India's commons.</p>
