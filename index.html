@@ -399,7 +399,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .feature h3{font-size:1.35rem;letter-spacing:-.02em;line-height:1.2}
 .feature p{font-size:.92rem;line-height:1.65;color:var(--muted)}
 .f-cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:auto;padding-top:1.1rem;
-  font-size:.87rem;font-weight:700;color:var(--blue)}
+  font-size:.87rem;font-weight:700;color:var(--cta);transition:color .15s}
+.f-cta:hover,.feature:hover .f-cta{color:var(--green-d)}
 .f-cta i,.f-cta svg.lucide{width:.95rem;height:.95rem;transition:transform .15s}
 .feature:hover .f-cta i,.feature:hover .f-cta svg.lucide{transform:translateX(3px)}
 
@@ -1548,7 +1549,7 @@ function footer(){
     <div class="cols">
       <div>
         <div class="fbrand"><span class="mk">${ic('sprout')}</span><span class="bt">Understanding <em>Commons</em></span></div>
-        <p>An educational module of the Commons Platform — building awareness of India's shared resources, their local names, and the acts of commoning that sustain them.</p>
+        <p>An educational module of the Commons Platform - building awareness of India's shared resources, their local names, and the acts of commoning that sustain them.</p>
       </div>
       <div><h5>Explore</h5><ul>
         <li onclick="go('#/what')">What are Commons</li>
@@ -1567,7 +1568,7 @@ function footer(){
         <li onclick="toast('Privacy and Terms (placeholder)')">Privacy &amp; Terms</li></ul></div>
     </div>
     <div class="bar">
-      <div class="legal"><span>2026 Understanding Commons — a module of the Commons Platform, built on India's Digital Public Infrastructure.</span></div>
+      <div class="legal"><span>2026 Understanding Commons - CC-BY 4.0 License. Commons Platform.</span></div>
       <div class="social">
         ${SOCIAL.map(x=>`<a href="${x.href}" target="_blank" rel="noopener noreferrer"
           title="${x.name}" aria-label="${x.name}">${socialMark(x)}</a>`).join("")}
