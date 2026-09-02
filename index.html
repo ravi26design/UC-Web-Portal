@@ -78,10 +78,10 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .nav-ic{border:0;background:none;padding:.25rem;color:var(--ink);display:grid;place-items:center;transition:color .15s}
 .nav-ic:hover{color:var(--green-d)}
 .nav-ic i,.nav-ic svg.lucide{width:1.25rem;height:1.25rem;stroke-width:2.4}
-.nav-av{width:2.1rem;height:2.1rem;border-radius:999px;background:var(--ink);color:#fff;
-  display:grid;place-items:center;flex:none;transition:background .15s}
-.nav-av i,.nav-av svg.lucide{width:1.15rem;height:1.15rem;stroke-width:2.2}
-.profilew-btn:hover .nav-av{background:var(--green-d)}
+.nav-mark{width:1.85rem;height:1.85rem;display:grid;place-items:center;flex:none;
+  color:var(--ink);transition:color .15s}
+.nav-mark svg{width:100%;height:100%;display:block}
+.profilew-btn:hover .nav-mark{color:var(--green-d)}
 .langw{position:relative}
 .langbtn{display:inline-flex;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem;
   font:inherit;font-size:.92rem;font-weight:600;color:var(--ink);transition:color .15s}
@@ -1118,22 +1118,30 @@ main{min-height:60vh;animation:fade .3s ease}
 
 /* ---- contribute: record-so-far map ---- */
 .cmapwrap{display:grid;grid-template-columns:17rem 1fr;gap:1.25rem;align-items:start}
-.cmap-rail{background:var(--bg-soft);border:1px solid var(--line);padding:1.25rem}
-.cstat{padding:.7rem 0;border-bottom:1px solid var(--line)}
+.cmap-rail{background:#fff;border:1px solid var(--line);padding:1.4rem}
+.cstat{display:flex;align-items:center;gap:.85rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
 .cstat:first-child{padding-top:0}
-.cstat b{display:block;font-size:1.9rem;font-weight:800;color:var(--ink);line-height:1.1}
-.cstat span{font-size:.8rem;color:var(--muted);line-height:1.35;display:block;margin-top:.15rem}
+.cstat:last-of-type{border-bottom:0;padding-bottom:.35rem}
+.cstat .cs-ic{width:2.25rem;height:2.25rem;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:var(--green-soft);color:var(--green-d)}
+.cstat .cs-ic i,.cstat .cs-ic svg.lucide{width:1.05rem;height:1.05rem;display:block}
+.cstat b{display:block;font-size:1.75rem;font-weight:800;color:var(--green-d);line-height:1.05;
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cstat span{font-size:.79rem;color:var(--muted);line-height:1.35;display:block;margin-top:.1rem}
 .cm-you{display:flex;gap:.6rem;align-items:flex-start;margin-top:.85rem;padding:.75rem;background:var(--green-soft);border:1px solid var(--green-line)}
 .cm-you i,.cm-you svg.lucide{width:1.05rem;height:1.05rem;color:var(--green-d);flex:none;margin-top:.1rem}
 .cm-you b{font-weight:800;color:var(--ink);font-size:.9rem}
 .cm-you span{display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;line-height:1.4}
-.cm-leg{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--line)}
-.cm-legrow{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--muted-2);padding:.22rem 0;font-weight:600}
-.cm-legrow i{width:.7rem;height:.7rem;border-radius:50%;flex:none;display:block}
-.cm-gap{display:flex;gap:.6rem;align-items:flex-start;margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--line)}
-.cm-gap i,.cm-gap svg.lucide{width:1.05rem;height:1.05rem;color:var(--blue);flex:none;margin-top:.15rem}
-.cm-gap p{font-size:.8rem;color:var(--muted);line-height:1.55}
-.cm-gap b{color:var(--ink);font-weight:700}
+.cm-leg{margin-top:1.15rem;padding-top:1.15rem;border-top:1px solid var(--line)}
+.cm-legrow{display:flex;align-items:center;gap:.55rem;font-size:.85rem;color:var(--ink);
+  padding:.3rem 0;font-weight:600}
+.cm-legrow i{width:.6rem;height:.6rem;border-radius:50%;flex:none;display:block;
+  box-shadow:0 0 0 3px color-mix(in srgb,currentColor 0%,transparent)}
+.cm-gap{display:flex;gap:.6rem;align-items:flex-start;margin-top:1.15rem;padding:.85rem;
+  background:var(--green-soft);border:1px solid var(--green-line)}
+.cm-gap i,.cm-gap svg.lucide{width:1rem;height:1rem;color:var(--green-d);flex:none;margin-top:.15rem}
+.cm-gap p{font-size:.79rem;color:var(--muted);line-height:1.6}
+.cm-gap b{display:block;color:var(--ink);font-weight:800;margin-bottom:.15rem}
 .cmap-canvas{border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-card)}
 .cmap-canvas .mapwrap{min-height:0}
 .mkpin.mine{border-color:var(--green-d);box-shadow:0 0 0 3px rgba(57,162,72,.28),0 6px 14px -4px rgba(20,30,60,.65)}
@@ -1518,7 +1526,7 @@ function header(active){
   let authArea;
   if(currentRole==null){
     authArea=`<button class="profilew-btn" onclick="go('#/login')" aria-label="Sign in" title="Sign in">
-      <span class="nav-av">${ic('user-round')}</span></button>`;
+      <span class="nav-mark">${userMark()}</span></button>`;
   }else{
     const nm=ROLES[currentRole][0];
     authArea=`<div class="profilew" id="profilew">
@@ -1575,6 +1583,10 @@ const SOCIAL=[
   {name:"LinkedIn", href:"https://www.linkedin.com/company/fesforcommons/", vb:"0 0 448 512",
    d:"M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"}
 ];
+/* solid profile glyph — Lucide only ships outline strokes */
+function userMark(){
+  return `<svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path d="M399 384.2C376.9 345.8 335.4 320 288 320l-64 0c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"></path></svg>`;
+}
 function socialMark(x){
   return `<svg viewBox="${x.vb}" fill="currentColor" aria-hidden="true"><path d="${x.d}"></path></svg>`;
 }
@@ -2282,9 +2294,12 @@ screens.contribute=(p)=>{
   <section class="section" style="background:#fff;padding-top:40px"><div class="mx">
     <div class="cmapwrap">
       <div class="cmap-rail">
-        <div class="cstat"><b id="cm-names">0</b><span>local names &amp; rules mapped</span></div>
-        <div class="cstat"><b id="cm-states">0</b><span>states represented</span></div>
-        <div class="cstat"><b id="cm-types">0</b><span>types of commons covered</span></div>
+        <div class="cstat"><span class="cs-ic">${ic('tag')}</span>
+          <div><b id="cm-names">0</b><span>local names &amp; rules mapped</span></div></div>
+        <div class="cstat"><span class="cs-ic">${ic('map-pin')}</span>
+          <div><b id="cm-states">0</b><span>states represented</span></div></div>
+        <div class="cstat"><span class="cs-ic">${ic('layers')}</span>
+          <div><b id="cm-types">0</b><span>types of commons covered</span></div></div>
         <div class="cm-you" id="cm-you" style="display:none">
           ${ic('user-round-check')}<div><b id="cm-you-n">0</b> from you<span>your entries are highlighted on the map</span></div>
         </div>
