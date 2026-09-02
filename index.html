@@ -1072,8 +1072,6 @@ main{min-height:60vh;animation:fade .3s ease}
 .detail-f .v{color:var(--ink);font-weight:600;text-align:right}
 .detail-f .v.none{color:var(--faint);font-weight:500}
 .dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 2.5rem}
-.actbar{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;flex-wrap:wrap}
-.actbar .row{gap:.6rem}
 .btn-outline.danger{color:var(--red);border-color:var(--line-2)}
 .btn-outline.danger:hover{background:var(--red);border-color:var(--red);color:#fff}
 .dgrid .detail-f:nth-child(-n+3){border-top:0}
@@ -1093,7 +1091,9 @@ main{min-height:60vh;animation:fade .3s ease}
 .sh-meta>span{display:inline-flex;align-items:center;gap:.35rem}
 .sh-meta i,.sh-meta svg.lucide{width:.95rem;height:.95rem;color:var(--faint)}
 .sh-meta .sr-warn i,.sh-meta .sr-warn svg.lucide{color:var(--amber-d)}
-.subhead .tag{flex:none;margin-top:.35rem}
+.sh-act{display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;justify-content:flex-end;margin-top:.35rem}
+.sh-act .row{gap:.5rem}
+@media(max-width:700px){.sh-act{justify-content:flex-start}}
 
 /* ---- activity & history (tabbed) ---- */
 .sd-hist{background:#fff;border:1px solid var(--line)}
@@ -2537,7 +2537,13 @@ screens.submission=(p)=>{
           <span>${ic('calendar')} 12 May 2026</span>
         </div>
       </div>
-      ${statusPill(status)}
+      <div class="sh-act">
+        ${canApprove?`<div class="row">
+          <button class="btn btn-green sm" onclick="toast('Approved (placeholder)')">${ic('check')} Approve</button>
+          <button class="btn btn-outline sm" onclick="toast('Changes requested (placeholder)')">${ic('message-square')} Request changes</button>
+          <button class="btn btn-outline sm danger" onclick="toast('Rejected (placeholder)')">${ic('x')} Reject</button>
+        </div>`:''}
+      </div>
     </div>
     <div class="stack">
         <div class="panel">
@@ -2551,14 +2557,6 @@ screens.submission=(p)=>{
           <div class="detail-f"><span class="k">Submitted on</span><span class="v">12 May 2026</span></div>
           </div>
         </div>
-        ${canApprove?`<div class="panel actbar">
-          <div class="kicker">Actions</div>
-          <div class="row">
-            <button class="btn btn-green" onclick="toast('Approved (placeholder)')">${ic('check')} Approve</button>
-            <button class="btn btn-outline" onclick="toast('Changes requested (placeholder)')">${ic('message-square')} Request changes</button>
-            <button class="btn btn-outline danger" onclick="toast('Rejected (placeholder)')">${ic('x')} Reject</button>
-          </div>
-        </div>`:''}
       <div class="sd-hist">
         <div class="sd-hist-h">${ic('history')} Activity &amp; history</div>
         <div class="sd-hist-b">
