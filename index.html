@@ -1075,10 +1075,20 @@ main{min-height:60vh;animation:fade .3s ease}
 .detail-f .k{color:var(--muted-2)}
 .detail-f .v{color:var(--ink);font-weight:600;text-align:right}
 .detail-f .v.none{color:var(--faint);font-weight:500}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 2.5rem}
+.actbar{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;flex-wrap:wrap}
+.actbar .row{gap:.6rem}
+.btn-outline.danger{color:var(--red);border-color:var(--line-2)}
+.btn-outline.danger:hover{background:var(--red);border-color:var(--red);color:#fff}
+.dgrid .detail-f:nth-child(-n+3){border-top:0}
+@media(max-width:900px){.dgrid{grid-template-columns:repeat(2,1fr)}
+  .dgrid .detail-f:nth-child(-n+3){border-top:1px solid var(--line)}
+  .dgrid .detail-f:nth-child(-n+2){border-top:0}}
+@media(max-width:560px){.dgrid{grid-template-columns:1fr}
+  .dgrid .detail-f:nth-child(-n+3){border-top:1px solid var(--line)}
+  .dgrid .detail-f:first-child{border-top:0}}
 
 /* ---- submission head ---- */
-.subback{margin:0 0 1.1rem -.5rem;color:var(--muted-2)}
-.subback:hover{color:var(--green-d)}
 .subhead{display:flex;align-items:flex-start;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;
   padding-bottom:1.35rem;margin-bottom:1.6rem;border-bottom:1px solid var(--line)}
 .subhead h1{font-size:1.7rem;margin:0}
@@ -1116,9 +1126,7 @@ main{min-height:60vh;animation:fade .3s ease}
 .cm-h{font-size:.83rem;color:var(--muted);margin-bottom:.3rem}
 .cm-h b{color:var(--ink);font-weight:800}
 .cm-t{font-size:.9rem;line-height:1.65;color:var(--ink-2)}
-.hist-empty{text-align:center;padding:1.75rem .5rem 1.25rem}
-.hist-empty b{display:block;font-size:.95rem;color:var(--ink);margin:.85rem 0 .35rem}
-.hist-empty p{font-size:.85rem;color:var(--muted);line-height:1.65;max-width:30rem;margin:0 auto}
+
 
 /* ---- count tabs ---- */
 .tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;margin:1.1rem 0 1.25rem}
@@ -2524,7 +2532,6 @@ screens.submission=(p)=>{
   const href='#/submission/'+p.src+'/'+p.idx;
   return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],`
   <section class="section" style="padding-top:2rem"><div class="mx">
-    <button class="btn btn-ghost sm subback" onclick="go('${back}')">${ic('arrow-left')} ${fromQueue?'Approvals':'My Contributions'}</button>
     <div class="subhead">
       <div class="sh-tx">
         <h1>${name}</h1>
@@ -2536,18 +2543,34 @@ screens.submission=(p)=>{
       </div>
       ${statusPill(status)}
     </div>
-    <div class="grid" style="grid-template-columns:1.6fr 1fr;gap:1.75rem;align-items:start">
+    <div class="stack">
+        <div class="panel">
+          <div class="kicker" style="margin-bottom:.6rem">Details</div>
+          <div class="dgrid">
+          <div class="detail-f"><span class="k">Type</span><span class="v">${type}</span></div>
+          <div class="detail-f"><span class="k">State / District</span><span class="v${hasLoc?'':' none'}">${hasLoc?loc:'Not set'}</span></div>
+          <div class="detail-f"><span class="k">GPS</span><span class="v${hasLoc?'':' none'}">${hasLoc?'18.52° N, 73.86° E':'Not set'}</span></div>
+          <div class="detail-f"><span class="k">Contributor</span><span class="v">${who}</span></div>
+          <div class="detail-f"><span class="k">Status</span><span class="v">${statusPill(status)}</span></div>
+          <div class="detail-f"><span class="k">Submitted on</span><span class="v">12 May 2026</span></div>
+          </div>
+        </div>
+        ${canApprove?`<div class="panel actbar">
+          <div class="kicker">Actions</div>
+          <div class="row">
+            <button class="btn btn-green" onclick="toast('Approved (placeholder)')">${ic('check')} Approve</button>
+            <button class="btn btn-outline" onclick="toast('Changes requested (placeholder)')">${ic('message-square')} Request changes</button>
+            <button class="btn btn-outline danger" onclick="toast('Rejected (placeholder)')">${ic('x')} Reject</button>
+          </div>
+        </div>`:''}
       <div class="sd-hist">
         <div class="sd-hist-h">${ic('history')} Activity &amp; history</div>
         <div class="sd-hist-b">
           <div class="seg-tabs">
-            ${[['comments','Comments'],['workflow','Submission Workflow'],['versions','Version History'],['activity','Activity Log']]
+            ${[['comments','Comments'],['workflow','Submission Workflow'],['activity','Activity Log']]
               .map(t=>`<button class="seg-tab ${tab===t[0]?'on':''}" onclick="go('${href}?tab='+'${t[0]}')">${t[1]}</button>`).join("")}
           </div>
           ${tab==='workflow'?wfTimeline(stage,who)
-           :tab==='versions'?`<div class="hist-empty">${tile('history','green')}
-              <b>No revisions yet</b>
-              <p>This submission hasn't been edited since it was created. Any change a reviewer or contributor makes will be listed here.</p></div>`
            :tab==='activity'?`
             <div class="log-row"><span class="log-dot"></span><div>
               <div class="lt"><b>${who}</b> submitted this ${type.toLowerCase()}</div><div class="ld">2026-05-12 · 10:45 AM</div></div></div>
@@ -2576,23 +2599,7 @@ screens.submission=(p)=>{
             </div>`}
         </div>
       </div>
-      <div class="stack">
-        <div class="panel">
-          <div class="kicker" style="margin-bottom:.6rem">Details</div>
-          <div class="detail-f"><span class="k">Type</span><span class="v">${type}</span></div>
-          <div class="detail-f"><span class="k">State / District</span><span class="v${hasLoc?'':' none'}">${hasLoc?loc:'Not set'}</span></div>
-          <div class="detail-f"><span class="k">GPS</span><span class="v${hasLoc?'':' none'}">${hasLoc?'18.52° N, 73.86° E':'Not set'}</span></div>
-          <div class="detail-f"><span class="k">Contributor</span><span class="v">${who}</span></div>
-          <div class="detail-f"><span class="k">Status</span><span class="v">${statusPill(status)}</span></div>
-          <div class="detail-f"><span class="k">Submitted on</span><span class="v">12 May 2026</span></div>
-        </div>
-        ${canApprove?`<div class="panel">
-          <div class="kicker" style="margin-bottom:.75rem">Actions</div>
-          <button class="btn btn-green block" onclick="toast('Approved (placeholder)')">${ic('check')} Approve</button>
-          <button class="btn btn-outline block mt8" onclick="toast('Changes requested (placeholder)')">${ic('message-square')} Request changes</button>
-          <button class="btn btn-outline block mt8" style="color:var(--red);border-color:var(--line-2)" onclick="toast('Rejected (placeholder)')">${ic('x')} Reject</button>
-        </div>`:''}
-      </div>
+    </div>
     </div>
   </div></section>`);
 };
