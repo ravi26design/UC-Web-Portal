@@ -1074,6 +1074,20 @@ main{min-height:60vh;animation:fade .3s ease}
 .detail-f:first-child{border-top:0}
 .detail-f .k{color:var(--muted-2)}
 .detail-f .v{color:var(--ink);font-weight:600;text-align:right}
+.detail-f .v.none{color:var(--faint);font-weight:500}
+
+/* ---- submission head ---- */
+.subback{margin:0 0 1.1rem -.5rem;color:var(--muted-2)}
+.subback:hover{color:var(--green-d)}
+.subhead{display:flex;align-items:flex-start;justify-content:space-between;gap:1.25rem;flex-wrap:wrap;
+  padding-bottom:1.35rem;margin-bottom:1.6rem;border-bottom:1px solid var(--line)}
+.subhead h1{font-size:1.7rem;margin:0}
+.sh-meta{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:.6rem;
+  font-size:.85rem;color:var(--muted-2)}
+.sh-meta>span{display:inline-flex;align-items:center;gap:.35rem}
+.sh-meta i,.sh-meta svg.lucide{width:.95rem;height:.95rem;color:var(--faint)}
+.sh-meta .sr-warn i,.sh-meta .sr-warn svg.lucide{color:var(--amber-d)}
+.subhead .tag{flex:none;margin-top:.35rem}
 
 /* ---- count tabs ---- */
 .tabs-c{display:flex;gap:.4rem;flex-wrap:wrap;margin:1.1rem 0 1.25rem}
@@ -2474,13 +2488,18 @@ screens.submission=(p)=>{
   const canApprove=roleCan('moderate')&&fromQueue;
   const back=fromQueue?'#/approvals':'#/contributions';
   const stage=status==='Pending'?0:status==='Reviewed'?1:status==='Approved'?2:status==='Published'?3:0;
+  const hasLoc=loc&&loc!=='—';
   return shell(null,[{label:"Home",href:"#/home"},{label:fromQueue?"Approvals":"My Contributions",href:back},{label:name}],`
-  <section class="section"><div class="mx">
-    <div class="between" style="margin-bottom:1.5rem">
-      <div>
-        <span class="eyebrow blue"><span class="pd"></span>${fromQueue?'Approval':'Submission'} · ${type}</span>
-        <h1 style="font-size:1.7rem;margin:.7rem 0 .35rem">${name}</h1>
-        <div class="muted" style="font-size:.87rem;display:flex;align-items:center;gap:.35rem">${ic('map-pin')} ${loc}</div>
+  <section class="section" style="padding-top:2rem"><div class="mx">
+    <button class="btn btn-ghost sm subback" onclick="go('${back}')">${ic('arrow-left')} ${fromQueue?'Approvals':'My Contributions'}</button>
+    <div class="subhead">
+      <div class="sh-tx">
+        <h1>${name}</h1>
+        <div class="sh-meta">
+          <span>${ic(type.toLowerCase().includes('rule')?'scale':'tag')} ${type}</span>
+          ${hasLoc?`<span>${ic('map-pin')} ${loc}</span>`:`<span class="sr-warn">${ic('circle-alert')} location missing</span>`}
+          <span>${ic('calendar')} 12 May 2026</span>
+        </div>
       </div>
       ${statusPill(status)}
     </div>
@@ -2521,8 +2540,8 @@ screens.submission=(p)=>{
         <div class="panel">
           <div class="kicker" style="margin-bottom:.6rem">Details</div>
           <div class="detail-f"><span class="k">Type</span><span class="v">${type}</span></div>
-          <div class="detail-f"><span class="k">State / District</span><span class="v">${loc}</span></div>
-          <div class="detail-f"><span class="k">GPS</span><span class="v">18.52° N, 73.86° E</span></div>
+          <div class="detail-f"><span class="k">State / District</span><span class="v${hasLoc?'':' none'}">${hasLoc?loc:'Not set'}</span></div>
+          <div class="detail-f"><span class="k">GPS</span><span class="v${hasLoc?'':' none'}">${hasLoc?'18.52° N, 73.86° E':'Not set'}</span></div>
           <div class="detail-f"><span class="k">Contributor</span><span class="v">${who}</span></div>
           <div class="detail-f"><span class="k">Status</span><span class="v">${statusPill(status)}</span></div>
           <div class="detail-f"><span class="k">Submitted on</span><span class="v">12 May 2026</span></div>
@@ -2533,7 +2552,6 @@ screens.submission=(p)=>{
           <button class="btn btn-outline block mt8" onclick="toast('Changes requested (placeholder)')">${ic('message-square')} Request changes</button>
           <button class="btn btn-outline block mt8" style="color:var(--red);border-color:var(--line-2)" onclick="toast('Rejected (placeholder)')">${ic('x')} Reject</button>
         </div>`:''}
-        <button class="btn btn-outline block" onclick="go('${back}')">${ic('arrow-left')} Back to ${fromQueue?'Approvals':'My Contributions'}</button>
       </div>
     </div>
   </div></section>`);
