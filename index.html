@@ -77,7 +77,11 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .navdiv{width:1px;height:1.6rem;background:var(--line-2);flex:none}
 .nav-ic{border:0;background:none;padding:.25rem;color:var(--ink);display:grid;place-items:center;transition:color .15s}
 .nav-ic:hover{color:var(--green-d)}
-.nav-ic i,.nav-ic svg.lucide{width:1.25rem;height:1.25rem}
+.nav-ic i,.nav-ic svg.lucide{width:1.25rem;height:1.25rem;stroke-width:2.4}
+.nav-av{width:2.1rem;height:2.1rem;border-radius:999px;background:var(--ink);color:#fff;
+  display:grid;place-items:center;flex:none;transition:background .15s}
+.nav-av i,.nav-av svg.lucide{width:1.15rem;height:1.15rem;stroke-width:2.2}
+.profilew-btn:hover .nav-av{background:var(--green-d)}
 .langw{position:relative}
 .langbtn{display:inline-flex;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem;
   font:inherit;font-size:.92rem;font-weight:600;color:var(--ink);transition:color .15s}
@@ -511,11 +515,22 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .selw select:hover{border-color:var(--blue)}
 .selw select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,67,151,.12)}
 .toolbar .selw select{padding:.55rem 2.3rem .55rem .9rem;font-size:.85rem}
-.dropzone{border:1.5px dashed var(--line-2);border-radius:.7rem;background:var(--bg-soft);padding:1.5rem;
-  text-align:center;color:var(--muted-2);font-size:.87rem;cursor:pointer;transition:.15s}
-.dropzone:hover{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
-.dropzone i,.dropzone svg.lucide{width:1.4rem;height:1.4rem;margin:0 auto .5rem;color:var(--faint)}
-.dropzone:hover i,.dropzone:hover svg.lucide{color:var(--blue)}
+.dropzone{display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  border:1.5px dashed var(--line-2);border-radius:.7rem;background:var(--bg-soft);
+  padding:1.75rem 1.5rem;text-align:center;color:var(--muted-2);font-size:.87rem;
+  cursor:pointer;transition:border-color .15s,background .15s}
+.dropzone:hover{border-color:var(--green);background:var(--green-soft)}
+.dz-ic{width:2.75rem;height:2.75rem;border-radius:50%;background:#fff;border:1px solid var(--line-2);
+  display:grid;place-items:center;color:var(--muted-2);margin-bottom:.55rem;transition:.15s}
+.dropzone:hover .dz-ic{border-color:var(--green-line);color:var(--green-d)}
+.dz-ic i,.dz-ic svg.lucide{width:1.25rem;height:1.25rem;display:block}
+.dropzone b{font-size:.92rem;font-weight:700;color:var(--ink)}
+.dropzone b u{text-decoration:none;color:var(--green-d);text-underline-offset:2px}
+.dropzone:hover b u{text-decoration:underline}
+.dz-hint{font-size:.8rem;color:var(--muted)}
+.dz-note{display:inline-flex;align-items:center;gap:.3rem;margin-top:.6rem;
+  font-size:.74rem;color:var(--faint)}
+.dz-note i,.dz-note svg.lucide{width:.8rem;height:.8rem;display:block}
 
 .admgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
 .admgrid .field:nth-child(5){grid-column:1/-1}
@@ -1158,20 +1173,21 @@ main{min-height:60vh;animation:fade .3s ease}
 .modal-ic i,.modal-ic svg.lucide{width:1.9rem;height:1.9rem}
 
 /* ---- wide form modal (Contribute) ---- */
-.modal-card.wide{width:min(64rem,100%);max-height:90vh;padding:0;text-align:left;display:flex;flex-direction:column}
+.modal-card.wide{width:min(46rem,100%);max-height:90vh;padding:0;text-align:left;display:flex;flex-direction:column}
 .fm-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex:none;
   padding:1.35rem 1.75rem;border-bottom:1px solid var(--line)}
 .fm-head b{display:block;font-size:1.3rem;font-weight:800;color:var(--ink);margin-top:.15rem}
 .fm-head .modal-x{position:static}
 .fm-body{flex:1;overflow-y:auto;padding:1.5rem 1.75rem 1.75rem;scrollbar-width:thin}
-.fm-grid{display:grid;grid-template-columns:1fr 19rem;gap:1.5rem;align-items:start}
+.fm-grid{display:block}
 .fm-grid>#contrib-form{border:0;box-shadow:none;padding:0!important}
-@media(max-width:900px){.fm-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.modal-back{padding:0}.modal-card.wide{max-height:100vh;height:100vh}
   .fm-head{padding:1.1rem 1.15rem}.fm-body{padding:1.15rem}}
 
 /* hero CTA that opens it */
 .ph-cta{flex:none;margin-bottom:.35rem}
+.hint.admnote{font-size:.78rem;line-height:1.5;color:var(--faint);align-items:flex-start}
+.hint.admnote i,.hint.admnote svg.lucide{width:.9rem;height:.9rem;margin-top:.15rem}
 
 </style>
 </head>
@@ -1501,7 +1517,8 @@ function appsMenu(){
 function header(active){
   let authArea;
   if(currentRole==null){
-    authArea=`<button class="nav-ic" onclick="go('#/login')" aria-label="Sign in" title="Sign in">${ic('circle-user-round')}</button>`;
+    authArea=`<button class="profilew-btn" onclick="go('#/login')" aria-label="Sign in" title="Sign in">
+      <span class="nav-av">${ic('user-round')}</span></button>`;
   }else{
     const nm=ROLES[currentRole][0];
     authArea=`<div class="profilew" id="profilew">
@@ -1523,9 +1540,9 @@ function header(active){
     <div class="links">${NAV.map(n=>`<a class="${active===n.id?'active':''}" onclick="go('${n.id}')">${n.label}</a>`).join("")}</div>
     <div class="navright">
       <span class="navdiv"></span>
-      <button class="nav-ic" onclick="openSearch()" aria-label="Search" title="Search">${ic('search')}</button>
       ${appsMenu()}
       ${authArea}
+      <button class="nav-ic" onclick="openSearch()" aria-label="Search" title="Search">${ic('search')}</button>
       <span class="navdiv"></span>
       <div class="langw" id="langw">
         <button class="langbtn" onclick="toggleLang(event)">EN ${ic('chevron-down')}</button>
@@ -2225,28 +2242,17 @@ screens.contribute=(p)=>{
             <span class="btn btn-outline sm" style="pointer-events:none">${ic('crosshair')} Use my location</span>
           </div></div>
         <div class="field"><label>Photos</label>
-          <div class="dropzone" onclick="toast('Upload photos (placeholder)')">${ic('image-up')}
-            <b>Drop photos here or click to browse</b>
-            <div class="hint" style="margin-top:.3rem">Scanned and stored on the secure platform NAS · JPG or PNG</div></div></div>
+          <div class="dropzone" onclick="toast('Upload photos (placeholder)')">
+            <span class="dz-ic">${ic('image-up')}</span>
+            <b>Drop photos here, or <u>browse</u></b>
+            <span class="dz-hint">JPG or PNG · up to 10 MB each</span>
+            <span class="dz-note">${ic('lock')} Stored on the secure platform NAS</span>
+          </div></div>
         <div class="between" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line)">
           <button class="btn btn-ghost" onclick="go('#/contribute')">Cancel</button>
           <button class="btn btn-primary arrow" onclick="submitContribution('${kind}')">Submit for review ${ic('arrow-right')}</button>
         </div>
       </div>
-            <div class="stack">
-          <div class="panel">
-            <div class="kicker" style="margin-bottom:1rem">What happens next</div>
-            ${WORKFLOW.map((w,i)=>`<div class="tl-row">
-              <div class="tl-node ${i===0?'done':''}">${i===0?ic('check'):i+1}</div>
-              <div class="tl-tx"><b>${w.t}</b><p>${['Queued for a reviewer','Admin verifies details & location','Admin approves for publishing','Appears on map & pages'][i]}</p></div>
-            </div>`).join("")}
-          </div>
-          <div class="panel" style="background:var(--green-soft);border-color:var(--green-line)">
-            <div class="row" style="align-items:flex-start;gap:.75rem">${ic('shield-check')}
-              <div><b style="font-size:.9rem">Reviewed before it goes live</b>
-                <p class="muted" style="font-size:.83rem;margin-top:.25rem">Nothing appears on the public map until a reviewer has verified the details and an admin has approved it.</p></div></div>
-          </div>
-            </div>
           </div>
         </div>
       </div>
