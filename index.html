@@ -154,16 +154,28 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
   .brand .bt{font-size:.95rem}
   .brand .mk{width:34px;height:34px}
   .signin-btn{padding:.55rem .8rem}
-  .profilew-menu{width:14.5rem}
+  /* searching takes the whole bar — nothing else competes for the width */
+  .bar:has(.navsearch.open) .brand,
+  .bar:has(.navsearch.open) .profilew,
+  .bar:has(.navsearch.open) .navtoggle{display:none}
+  .navsearch.open .ns-field{max-width:none}
+  .navsearch.open .ns-sug{max-height:60vh}
 }
 /* mobile drawer */
 .mobnav{display:none;border-top:1px solid var(--line);background:#fff;padding:.75rem 1.15rem 1.15rem;
-  box-shadow:0 12px 20px -14px rgba(74,66,62,.4)}
+  box-shadow:0 12px 20px -14px rgba(74,66,62,.4);
+  max-height:calc(100vh - 5rem);max-height:calc(100dvh - 5rem);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .mobnav.open{display:block}
 .mobnav a{display:flex;align-items:center;gap:.65rem;padding:.7rem .75rem;border-radius:.6rem;
   font-size:.95rem;font-weight:600;color:var(--muted)}
 .mobnav a.active{background:var(--blue-soft);color:var(--blue)}
 .mobnav a i,.mobnav a svg.lucide{width:1.05rem;height:1.05rem;color:var(--faint)}
+.mob-h{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+  margin:.85rem .75rem .35rem;padding-top:.75rem;border-top:1px solid var(--line)}
+.mob-langs{display:flex;flex-wrap:wrap;gap:.4rem;padding:.15rem .75rem .35rem}
+.mob-lang{border:1px solid var(--line-2);background:#fff;border-radius:999px;padding:.45rem .85rem;
+  font:inherit;font-size:.85rem;font-weight:600;color:var(--ink);cursor:pointer;min-height:38px}
+.mob-lang.on{background:var(--green);border-color:var(--green);color:#fff}
 
 /* profile chip */
 .profilew{position:relative}
@@ -178,6 +190,12 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .profilew.open .pw-cv{transform:rotate(180deg)}
 .profilew-menu{position:absolute;right:0;top:calc(100% + .55rem);width:16rem;background:#fff;border:1px solid var(--line);
   border-radius:.8rem;box-shadow:var(--shadow-float);padding:.4rem;display:none;z-index:70}
+/* on a phone the menu is wider than the space left of the avatar — pin it to the viewport */
+@media(max-width:700px){
+  .profilew{position:static}
+  .profilew-menu{position:fixed;top:4.1rem;right:.9rem;left:auto;
+    width:auto;min-width:14.5rem;max-width:calc(100vw - 1.8rem)}
+}
 .profilew.open .profilew-menu{display:block}
 .pw-head{display:flex;align-items:center;gap:.7rem;padding:.7rem}
 .pw-head b{display:block;font-size:.92rem;color:var(--ink)}
@@ -515,7 +533,8 @@ nav.top .links a.active{color:var(--green-d);background:none;font-weight:700}
 .callout .tx strong{display:block;font-size:1.02rem;color:var(--ink)}
 .callout .tx span{font-size:.9rem;color:var(--muted)}
 
-.clearbtn{font-size:.82rem;font-weight:700;color:var(--blue);background:none;border:0;padding:0}
+.clearbtn{font-size:.82rem;font-weight:700;color:var(--blue);background:none;border:0;
+  padding:.4rem .2rem;min-height:36px;display:inline-flex;align-items:center}
 .clearbtn:hover{text-decoration:underline}
 .layout-wide{display:grid;grid-template-columns:1fr 21rem;gap:2rem;align-items:start}
 @media(max-width:1080px){.layout-wide{grid-template-columns:1fr}}
@@ -1704,6 +1723,11 @@ function header(active){
   <div class="mobnav" id="mobnav">
     ${NAV.map(n=>`<a class="${active===n.id?'active':''}" onclick="closeMobNav();go('${n.id}')">${ic(n.icon)} ${n.label}</a>`).join("")}
     ${currentRole==null?`<a onclick="closeMobNav();go('#/login')">${ic('log-in')} Sign in</a>`:''}
+    <div class="mob-h">Commons Platform</div>
+    ${APPS_PRODUCTS.concat(APPS_QUICK).map(a=>`<a onclick="closeMobNav();${a[3]}">${ic(a[1])} ${a[0]}</a>`).join("")}
+    <div class="mob-h">Language</div>
+    <div class="mob-langs">${["English","हिन्दी","मराठी","తెలుగు"].map((l,i)=>
+      `<button class="mob-lang ${i===0?'on':''}" onclick="pickLang(this,'${l}')">${l}</button>`).join("")}</div>
   </div></nav>`;
 }
 function crumbs(items){
@@ -3122,6 +3146,7 @@ let typeMap=null, typeMarkers=null;
 function initTypeMap(){
   const el=document.getElementById('typeMap');
   if(!el || !window.L) return;
+  if(el._leaflet_id) return;   /* a re-render can queue two inits for one container */
   typeMap=L.map(el,{scrollWheelZoom:false,zoomControl:true,attributionControl:true})
           .setView([22.6,80.0],4.4);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
@@ -3177,6 +3202,7 @@ function contribData(){
 function initContribMap(){
   const el=document.getElementById('contribMap');
   if(!el || !window.L) return;
+  if(el._leaflet_id) return;   /* a re-render can queue two inits for one container */
   contribMap=L.map(el,{scrollWheelZoom:false,zoomControl:true,attributionControl:true}).setView([22.4,80.0],4.6);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
     attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:10, minZoom:3
@@ -3222,6 +3248,7 @@ function sigStatesFor(i){
 function initSigMap(){
   const el=document.getElementById('sigMap');
   if(!el || !window.L) return;
+  if(el._leaflet_id) return;   /* a re-render can queue two inits for one container */
   sigMap=L.map(el,{scrollWheelZoom:false}).setView([22.6,80.0],4.4);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
     attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:10, minZoom:3}).addTo(sigMap);
