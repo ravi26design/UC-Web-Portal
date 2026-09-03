@@ -920,6 +920,8 @@ footer.site .bar{max-width:90rem;margin:0 auto;padding:1.35rem 2rem 2rem;
   border-top:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;
   gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--muted-2)}
 footer.site .bar .legal{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+footer.site .bar .legal a{cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .15s}
+footer.site .bar .legal a:hover{color:var(--cta)}
 footer.site .social{display:flex;align-items:center;gap:1.1rem}
 footer.site .social a{border:0;background:none;padding:0;color:var(--green);cursor:pointer;
   display:grid;place-items:center;text-decoration:none;transition:color .15s}
@@ -1778,7 +1780,9 @@ function footer(){
         <li onclick="toast('Privacy and Terms (placeholder)')">Privacy &amp; Terms</li></ul></div>
     </div>
     <div class="bar">
-      <div class="legal"><span>2026 Understanding Commons - CC-BY 4.0 License. Commons Platform.</span></div>
+      <div class="legal"><span>2026 Understanding Commons -
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC-BY 4.0 License</a>.
+        <a href="https://commonsplatform.in/" target="_blank" rel="noopener noreferrer">Commons Platform</a>.</span></div>
       <div class="social">
         ${SOCIAL.map(x=>`<a href="${x.href}" target="_blank" rel="noopener noreferrer"
           title="${x.name}" aria-label="${x.name}">${socialMark(x)}</a>`).join("")}
