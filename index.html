@@ -1892,16 +1892,13 @@ function shell(active,crumbItems,body){
 
 /* ---- account section shell ---- */
 function accountNav(active){
+  /* one flat list — no group headings */
   const groups=[
-    {label:'', items:[['profile','user-round','My Profile','#/profile',true]]},
-    {label:'My work', items:[
+    {label:'', items:[
+      ['profile','user-round','My Profile','#/profile',true],
       ['contributions','file-text','My Contributions','#/contributions',roleCan('contribute')],
-      ['approvals','circle-check-big','Approvals','#/approvals',roleCan('moderate')]
-    ]},
-    {label:'Manage', items:[
-      ['users','users','Users & Roles','#/users',roleCan('admin')]
-    ]},
-    {label:'Account', items:[
+      ['approvals','circle-check-big','Approvals','#/approvals',roleCan('moderate')],
+      ['users','users','Users & Roles','#/users',roleCan('admin')],
       ['password','key-round','Change Password','',true],
       ['signout','log-out','Sign out','',true]
     ]}
