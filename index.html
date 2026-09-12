@@ -6,7 +6,8 @@
 <title>Understanding Commons — Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,300;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="home-hero.jpg">
 <script src="https://unpkg.com/lucide@0.474.0/dist/umd/lucide.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -33,7 +34,9 @@
   --t-water:#1565C0;    --t-water-s:#E8F1FD;
   --t-coastal:#0E9488;  --t-coastal-s:#E1F5F3;
   --t-cultural:#7C3AED; --t-cultural-s:#F2ECFE;
-  --sans:'Inter','Helvetica Neue',Helvetica,'Segoe UI',Roboto,system-ui,Arial,sans-serif;
+  /* type as stories.commonsplatform.in sets it: Lato for text, DM Serif Display for headings */
+  --sans:'Lato','Helvetica Neue',Helvetica,'Segoe UI',Roboto,system-ui,Arial,sans-serif;
+  --serif:'DM Serif Display',Georgia,'Times New Roman',serif;
   --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
   --shadow-card:0 1px 2px rgba(74,66,62,.03),0 14px 34px -22px rgba(74,66,62,.22);
   --shadow-lift:0 22px 46px -22px rgba(74,66,62,.32);
@@ -49,9 +52,12 @@ body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);f
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer}
 img{max-width:100%;display:block}
-h1{font-size:clamp(2rem,4.2vw,2.6rem);font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1.12;margin:0}
-h2{font-weight:800;letter-spacing:-.02em;color:var(--ink);margin:0}
-h3,h4,h5{font-weight:700;color:var(--ink);margin:0}
+/* the serif carries the headings; h5/h6 are small labels here, so they stay in Lato */
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400}
+h1{font-size:clamp(2.1rem,4.4vw,2.75rem);letter-spacing:-.01em;color:var(--ink);line-height:1.14;margin:0}
+h2{letter-spacing:-.005em;color:var(--ink);margin:0}
+h3,h4{color:var(--ink);margin:0}
+h5,h6{font-weight:700;color:var(--ink);margin:0}
 p{margin:0}
 em{font-style:normal;color:var(--green)}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
